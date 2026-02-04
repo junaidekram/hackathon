@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -389,9 +388,12 @@
             </form>
         </div>
     </div>
+<script>
+        // --- CONFIGURATION ---
+        // REPLACE THIS WITH YOUR DEPLOYED CLOUDFLARE WORKER URL
+        const API_URL = 'https://your-hackathon-backend.workers.dev';
 
-    <script>
-        // --- 1. DEFINE UI FUNCTIONS FIRST (So they work even if DB fails) ---
+        // Modal Logic
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         
@@ -405,26 +407,13 @@
              }
         });
 
-        // --- 2. DATABASE CONFIGURATION ---
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; 
-        const SUPABASE_KEY = 'YOUR_SUPABASE_KEY'; 
-        
-        // Safe Initialization
-        let supabase;
-        try {
-            if (window.supabase) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            } else {
-                console.error("Supabase library not loaded. Check your internet connection or CDN link.");
-            }
-        } catch (err) {
-            console.error("Supabase Init Failed:", err);
-        }
+        // --- FORM SUBMISSION HANDLERS ---
 
-        // --- 3. FORM HANDLERS ---
         async function submitSolo(e) {
             e.preventDefault();
-            if (!supabase) return alert("Database not connected. Refresh the page.");
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.innerText = "Submitting...";
+            submitBtn.disabled = true;
 
             const data = {
                 first_name: document.getElementById('s_firstName').value,
@@ -435,31 +424,70 @@
                 guardian_phone: document.getElementById('s_guardPhone').value,
                 guardian_email: document.getElementById('s_guardEmail').value,
                 grade_level: document.getElementById('s_grade').value,
-                coding_level: document.getElementById('s_coding').value
+                coding_level: parseInt(document.getElementById('s_coding').value)
             };
-            
-            const { error } = await supabase.from('individual_hackers').insert([data]);
-            if(error) alert('Error: ' + error.message);
-            else { alert('Registered Successfully!'); closeModal('soloModal'); e.target.reset(); }
+
+            try {
+                const response = await fetch(`${API_URL}/register-solo`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    alert('Registered Successfully!');
+                    closeModal('soloModal');
+                    e.target.reset();
+                } else {
+                    throw new Error('Server error');
+                }
+            } catch (err) {
+                alert('Registration failed. Please try again.');
+                console.error(err);
+            } finally {
+                submitBtn.innerText = "Submit Registration";
+                submitBtn.disabled = false;
+            }
         }
 
         async function submitTeam(e) {
             e.preventDefault();
-            if (!supabase) return alert("Database not connected. Refresh the page.");
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.innerText = "Submitting...";
+            submitBtn.disabled = true;
 
             const data = {
                 team_name: document.getElementById('t_teamName').value,
                 member_names: document.getElementById('t_members').value
             };
-            
-            const { error } = await supabase.from('teams').insert([data]);
-            if(error) alert('Error: ' + error.message);
-            else { alert('Team Registered Successfully!'); closeModal('teamModal'); e.target.reset(); }
+
+            try {
+                const response = await fetch(`${API_URL}/register-team`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Team Registered Successfully!');
+                    closeModal('teamModal');
+                    e.target.reset();
+                } else {
+                    throw new Error('Server error');
+                }
+            } catch (err) {
+                alert('Registration failed.');
+            } finally {
+                submitBtn.innerText = "Submit Team";
+                submitBtn.disabled = false;
+            }
         }
 
         async function submitJudge(e) {
             e.preventDefault();
-            if (!supabase) return alert("Database not connected. Refresh the page.");
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.innerText = "Submitting...";
+            submitBtn.disabled = true;
 
             const data = {
                 first_name: document.getElementById('j_firstName').value,
@@ -471,10 +499,27 @@
                 reason_to_judge: document.getElementById('j_why').value,
                 value_add: document.getElementById('j_value').value
             };
-            
-            const { error } = await supabase.from('judges').insert([data]);
-            if(error) alert('Error: ' + error.message);
-            else { alert('Application Submitted!'); closeModal('judgeModal'); e.target.reset(); }
+
+            try {
+                const response = await fetch(`${API_URL}/apply-judge`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Application Submitted!');
+                    closeModal('judgeModal');
+                    e.target.reset();
+                } else {
+                    throw new Error('Server error');
+                }
+            } catch (err) {
+                alert('Submission failed.');
+            } finally {
+                submitBtn.innerText = "Submit Application";
+                submitBtn.disabled = false;
+            }
         }
     </script>
 </body>
