@@ -5,7 +5,7 @@
     <title>Admin Portal | ICN Hackathon</title>
     <link rel="icon" type="image/png" href="icon.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-900 text-gray-200 font-sans p-8">
@@ -96,12 +96,9 @@
     </div>
 
     <script>
-        // --- CONFIGURATION ---
+        // --- 1. DEFINE UI FUNCTIONS FIRST ---
+        // This ensures the "Unlock" button exists even if DB connection fails later
         const ADMIN_CODE = "secure123"; 
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; 
-        const SUPABASE_KEY = 'YOUR_SUPABASE_KEY'; 
-
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         function login() {
             const input = document.getElementById('secretCode').value;
@@ -114,46 +111,69 @@
             }
         }
 
+        // --- 2. DATABASE CONFIGURATION ---
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; 
+        const SUPABASE_KEY = 'YOUR_SUPABASE_KEY'; 
+
+        // Safe Init
+        let supabase;
+        try {
+            if (window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            } else {
+                console.error("Supabase library not loaded.");
+            }
+        } catch (err) { console.error(err); }
+
+        // --- 3. FETCH DATA ---
         async function fetchData() {
+            if(!supabase) return alert("Database connection failed. Check console.");
+
             // Fetch Teams
             const { data: teams } = await supabase.from('teams').select('*');
-            document.getElementById('countTeams').innerText = teams.length;
-            const teamsHtml = teams.map(t => `
-                <tr class="hover:bg-gray-700">
-                    <td class="p-3 font-bold text-white">${t.team_name}</td>
-                    <td class="p-3">${t.member_names}</td>
-                    <td class="p-3">${new Date(t.created_at).toLocaleDateString()}</td>
-                </tr>`).join('');
-            document.getElementById('teamsTable').innerHTML = teamsHtml;
+            if(teams) {
+                document.getElementById('countTeams').innerText = teams.length;
+                const teamsHtml = teams.map(t => `
+                    <tr class="hover:bg-gray-700">
+                        <td class="p-3 font-bold text-white">${t.team_name}</td>
+                        <td class="p-3">${t.member_names}</td>
+                        <td class="p-3">${new Date(t.created_at).toLocaleDateString()}</td>
+                    </tr>`).join('');
+                document.getElementById('teamsTable').innerHTML = teamsHtml;
+            }
 
             // Fetch Solos
             const { data: solos } = await supabase.from('individual_hackers').select('*');
-            document.getElementById('countSolo').innerText = solos.length;
-            const soloHtml = solos.map(s => `
-                <tr class="hover:bg-gray-700">
-                    <td class="p-3 font-bold text-white">${s.first_name} ${s.last_name}</td>
-                    <td class="p-3">${s.email}<br><span class="text-xs text-gray-500">${s.phone || 'NA'}</span></td>
-                    <td class="p-3 text-xs">
-                        ${s.guardian_name ? `Parent: ${s.guardian_name}<br>` : ''}
-                        ${s.guardian_email ? `Email: ${s.guardian_email}` : ''}
-                    </td>
-                    <td class="p-3">${s.grade_level || '-'}</td>
-                    <td class="p-3 font-mono font-bold text-brand">${s.coding_level}/10</td>
-                </tr>`).join('');
-            document.getElementById('soloTable').innerHTML = soloHtml;
+            if(solos) {
+                document.getElementById('countSolo').innerText = solos.length;
+                const soloHtml = solos.map(s => `
+                    <tr class="hover:bg-gray-700">
+                        <td class="p-3 font-bold text-white">${s.first_name} ${s.last_name}</td>
+                        <td class="p-3">${s.email}<br><span class="text-xs text-gray-500">${s.phone || 'NA'}</span></td>
+                        <td class="p-3 text-xs">
+                            ${s.guardian_name ? `Parent: ${s.guardian_name}<br>` : ''}
+                            ${s.guardian_email ? `Email: ${s.guardian_email}` : ''}
+                        </td>
+                        <td class="p-3">${s.grade_level || '-'}</td>
+                        <td class="p-3 font-mono font-bold text-brand">${s.coding_level}/10</td>
+                    </tr>`).join('');
+                document.getElementById('soloTable').innerHTML = soloHtml;
+            }
 
             // Fetch Judges
             const { data: judges } = await supabase.from('judges').select('*');
-            document.getElementById('countJudges').innerText = judges.length;
-            const judgeHtml = judges.map(j => `
-                <tr class="hover:bg-gray-700">
-                    <td class="p-3 font-bold text-white">${j.first_name} ${j.last_name}</td>
-                    <td class="p-3">${j.email}<br><span class="text-xs text-gray-500">${j.phone}</span></td>
-                    <td class="p-3">${j.job_title}</td>
-                    <td class="p-3 text-xs max-w-xs truncate" title="${j.reason_to_judge}">${j.reason_to_judge}</td>
-                    <td class="p-3 text-xs max-w-xs truncate" title="${j.value_add}">${j.value_add}</td>
-                </tr>`).join('');
-            document.getElementById('judgeTable').innerHTML = judgeHtml;
+            if(judges) {
+                document.getElementById('countJudges').innerText = judges.length;
+                const judgeHtml = judges.map(j => `
+                    <tr class="hover:bg-gray-700">
+                        <td class="p-3 font-bold text-white">${j.first_name} ${j.last_name}</td>
+                        <td class="p-3">${j.email}<br><span class="text-xs text-gray-500">${j.phone}</span></td>
+                        <td class="p-3">${j.job_title}</td>
+                        <td class="p-3 text-xs max-w-xs truncate" title="${j.reason_to_judge}">${j.reason_to_judge}</td>
+                        <td class="p-3 text-xs max-w-xs truncate" title="${j.value_add}">${j.value_add}</td>
+                    </tr>`).join('');
+                document.getElementById('judgeTable').innerHTML = judgeHtml;
+            }
         }
     </script>
 </body>
