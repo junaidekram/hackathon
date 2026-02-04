@@ -7,26 +7,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            light: '#34d399', // Emerald 400
-                            DEFAULT: '#10b981', // Emerald 500
-                            dark: '#064e3b', // Emerald 900
-                        },
-                        dark: {
-                            bg: '#0f172a', // Slate 900
-                            card: '#1e293b', // Slate 800
-                        }
+                        brand: { light: '#34d399', DEFAULT: '#10b981', dark: '#064e3b' },
+                        dark: { bg: '#0f172a', card: '#1e293b' }
                     },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    }
+                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
                 }
             }
         }
@@ -34,10 +23,7 @@
     <style>
         body { background-color: #0f172a; color: #e2e8f0; }
         .tech-border { border: 1px solid #334155; }
-        .hero-pattern {
-            background-image: radial-gradient(#334155 1px, transparent 1px);
-            background-size: 30px 30px;
-        }
+        .hero-pattern { background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 30px 30px; }
     </style>
 </head>
 <body class="antialiased font-sans">
@@ -51,11 +37,11 @@
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#about" class="hover:text-brand transition duration-300">Overview</a>
-                        <a href="#schedule" class="hover:text-brand transition duration-300">Timeline</a>
-                        <a href="#rules" class="hover:text-brand transition duration-300">Rules</a>
-                        <a href="#judging" class="hover:text-brand transition duration-300">Judging</a>
-                        <a href="#register" class="bg-brand hover:bg-brand-light text-dark-bg font-bold px-4 py-2 rounded-md transition duration-300">Register</a>
+                        <a href="#about" class="hover:text-brand transition">Overview</a>
+                        <a href="#schedule" class="hover:text-brand transition">Timeline</a>
+                        <a href="#pitch-reqs" class="hover:text-brand transition">The Pitch</a>
+                        <a href="#judges" class="hover:text-brand transition">Judges</a>
+                        <a href="#register" class="bg-brand hover:bg-brand-light text-dark-bg font-bold px-4 py-2 rounded-md transition">Register</a>
                     </div>
                 </div>
             </div>
@@ -71,26 +57,8 @@
                 Build for <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-light to-blue-500">Impact</span>
             </h1>
             <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-400">
-                A week-long hackathon to create technology that matters. Join developers, designers, and innovators in the Chicago area.
+                A week-long hackathon to create technology that matters. Join developers, designers, and innovators.
             </p>
-            
-            <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-                <div class="bg-dark-card border border-gray-700 p-4 rounded-lg flex items-center gap-4 min-w-[200px]">
-                    <i class="fa-regular fa-calendar text-brand text-2xl"></i>
-                    <div class="text-left">
-                        <p class="text-xs text-gray-400 uppercase">Dates</p>
-                        <p class="font-bold">Aug 2 - Aug 9</p>
-                    </div>
-                </div>
-                <div class="bg-dark-card border border-gray-700 p-4 rounded-lg flex items-center gap-4 min-w-[200px]">
-                    <i class="fa-solid fa-users text-brand text-2xl"></i>
-                    <div class="text-left">
-                        <p class="text-xs text-gray-400 uppercase">Team Size</p>
-                        <p class="font-bold">1 - 4 Hackers</p>
-                    </div>
-                </div>
-            </div>
-            
             <div class="mt-10">
                 <a href="#register" class="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-dark-bg bg-brand hover:bg-brand-light md:text-lg transition transform hover:scale-105">
                     Start Hacking <i class="fa-solid fa-arrow-right ml-2"></i>
@@ -107,9 +75,6 @@
                     <p class="text-gray-300 text-lg mb-4">
                         This is a week-long hackathon where participants compete to create an app, game, or webpage that solves a real problem.
                     </p>
-                    <p class="text-gray-300 text-lg mb-4">
-                        Whether you are a solo developer or a team of four, this is your chance to showcase your skills, learn new technologies, and contribute to a good cause.
-                    </p>
                     <div class="bg-dark-bg p-4 rounded border border-gray-700 mt-6">
                         <p class="text-brand font-bold"><i class="fa-solid fa-heart mr-2"></i>Charity Initiative</p>
                         <p class="text-sm text-gray-400 mt-1">
@@ -118,169 +83,147 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-dark-bg p-6 rounded-lg tech-border text-center hover:border-brand transition">
+                    <div class="bg-dark-bg p-6 rounded-lg tech-border text-center">
                         <i class="fa-brands fa-github text-4xl mb-4 text-white"></i>
                         <h3 class="font-bold">Open Source</h3>
-                        <p class="text-sm text-gray-400">Hosted on GitHub</p>
                     </div>
-                    <div class="bg-dark-bg p-6 rounded-lg tech-border text-center hover:border-brand transition">
+                    <div class="bg-dark-bg p-6 rounded-lg tech-border text-center">
                         <i class="fa-solid fa-robot text-4xl mb-4 text-white"></i>
                         <h3 class="font-bold">AI Allowed</h3>
-                        <p class="text-sm text-gray-400">Leverage GenAI tools</p>
-                    </div>
-                    <div class="bg-dark-bg p-6 rounded-lg tech-border text-center hover:border-brand transition">
-                        <i class="fa-solid fa-presentation-screen text-4xl mb-4 text-white"></i>
-                        <h3 class="font-bold">Live Pitch</h3>
-                        <p class="text-sm text-gray-400">Hybrid Finale</p>
-                    </div>
-                    <div class="bg-dark-bg p-6 rounded-lg tech-border text-center hover:border-brand transition">
-                        <i class="fa-solid fa-network-wired text-4xl mb-4 text-white"></i>
-                        <h3 class="font-bold">Networking</h3>
-                        <p class="text-sm text-gray-400">Meet Local Talent</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="schedule" class="py-20 bg-dark-bg relative">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold mb-12 text-center font-mono">Event Timeline</h2>
-            
-            <div class="relative border-l-2 border-gray-700 ml-4 space-y-12">
-                
-                <div class="relative pl-8 group">
-                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-brand group-hover:animate-pulse"></div>
-                    <div class="text-sm text-brand font-mono mb-1">Sun, Aug 2 @ 9:00 AM</div>
-                    <h3 class="text-xl font-bold text-white">Kickoff & Theme Release</h3>
-                    <p class="text-gray-400">User manual release. Hacking begins immediately.</p>
-                </div>
-
-                <div class="relative pl-8">
-                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-gray-600"></div>
-                    <div class="text-sm text-gray-400 font-mono mb-1">Fri, Aug 7 @ 6:00 PM</div>
-                    <h3 class="text-xl font-bold text-white">Pitch Signup Deadline</h3>
-                    <p class="text-gray-400">Last chance to sign up for pitching to be eligible for awards.</p>
-                </div>
-
-                <div class="relative pl-8">
-                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-gray-600"></div>
-                    <div class="text-sm text-gray-400 font-mono mb-1">Sat, Aug 8 @ 6:00 PM</div>
-                    <h3 class="text-xl font-bold text-white">Pitch Schedule Released</h3>
-                    <p class="text-gray-400">Teams will receive their presentation slots.</p>
-                </div>
-
-                <div class="relative pl-8 group">
-                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-red-500"></div>
-                    <div class="text-sm text-red-400 font-mono mb-1">Sun, Aug 9 @ 9:00 AM</div>
-                    <h3 class="text-xl font-bold text-white">Code Freeze</h3>
-                    <p class="text-gray-400">Last commits into GitHub. Later commits result in penalties.</p>
-                </div>
-
-                <div class="relative pl-8">
-                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-brand"></div>
-                    <div class="text-sm text-brand font-mono mb-1">Sun, Aug 9 @ 9:30 AM - 6:00 PM</div>
-                    <h3 class="text-xl font-bold text-white">Pitches & Awards Ceremony</h3>
-                    <p class="text-gray-400">Judging begins at 9:30 AM. Awards ceremony concludes the event at 6:00 PM.</p>
-                </div>
-
+    <section id="pitch-reqs" class="py-20 bg-dark-bg relative border-t border-gray-800">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold font-mono text-white">The Pitch Manifesto</h2>
+                <p class="text-gray-400 mt-2">Pitches start Sun, Aug 9 at 9:30 a.m. Slides are optional, but clarity is mandatory.</p>
             </div>
-        </div>
-    </section>
 
-    <section id="judging" class="py-20 bg-dark-card">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-12">
-                
-                <div>
-                    <h2 class="text-2xl font-bold mb-6 font-mono text-brand">Technical Guidelines</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-dark-card p-8 rounded-xl border border-gray-700">
+                    <h3 class="text-xl font-bold text-brand mb-6"><i class="fa-solid fa-list-check mr-2"></i>Required Content</h3>
+                    <p class="text-sm text-gray-400 mb-4">You must address these 7 points during your demo:</p>
+                    <ol class="space-y-3 text-gray-300 list-decimal list-inside marker:text-brand marker:font-bold">
+                        <li><strong>The Idea:</strong> What was your original concept?</li>
+                        <li><strong>The Goal:</strong> What were you trying to achieve?</li>
+                        <li><strong>The Process:</strong> What steps did you take to reach the goal?</li>
+                        <li><strong>Self-Assessment:</strong> How well do you think you did?</li>
+                        <li><strong>The "Why":</strong> Why should your project win?</li>
+                        <li><strong>Walkthrough:</strong> A live demo of the project.</li>
+                        <li><strong>Q&A:</strong> Answer questions from the judges.</li>
+                    </ol>
+                </div>
+
+                <div class="bg-dark-card p-8 rounded-xl border border-gray-700">
+                    <h3 class="text-xl font-bold text-brand mb-6"><i class="fa-solid fa-microphone-lines mr-2"></i>Presentation Style</h3>
                     <ul class="space-y-4">
                         <li class="flex items-start">
-                            <i class="fa-brands fa-github mt-1 mr-3 text-gray-400"></i>
+                            <i class="fa-solid fa-users-viewfinder mt-1 mr-3 text-blue-400"></i>
                             <div>
-                                <strong class="text-white">Repository Requirement:</strong>
-                                <p class="text-gray-400 text-sm">All teams must create a GitHub repo and add the following users as collaborators:</p>
-                                <code class="block bg-black p-2 mt-2 rounded text-brand-light text-sm font-mono select-all">junaidekram, akirawan1</code>
+                                <strong class="text-white">Team Effort</strong>
+                                <p class="text-gray-400 text-sm">Every member must participate equally. No confusion on who is speaking next.</p>
                             </div>
                         </li>
                         <li class="flex items-start">
-                            <i class="fa-solid fa-microchip mt-1 mr-3 text-gray-400"></i>
+                            <i class="fa-regular fa-eye mt-1 mr-3 text-blue-400"></i>
                             <div>
-                                <strong class="text-white">AI Policy:</strong>
-                                <p class="text-gray-400 text-sm">AI tools are permitted and encouraged to help achieve your goals.</p>
+                                <strong class="text-white">Engagement</strong>
+                                <p class="text-gray-400 text-sm">Maintain eye contact. Do not read directly off a paper or slides.</p>
                             </div>
                         </li>
                         <li class="flex items-start">
-                            <i class="fa-solid fa-ban mt-1 mr-3 text-red-400"></i>
+                            <i class="fa-solid fa-check-double mt-1 mr-3 text-blue-400"></i>
                             <div>
-                                <strong class="text-white">Zero Tolerance:</strong>
-                                <p class="text-gray-400 text-sm">No plagiarism, copyright infringement, or copying code from other public repositories. Violations result in immediate disqualification.</p>
+                                <strong class="text-white">Preparation</strong>
+                                <p class="text-gray-400 text-sm">Minimal stuttering. Know your lines and your code.</p>
                             </div>
                         </li>
                     </ul>
                 </div>
-
-                <div>
-                    <h2 class="text-2xl font-bold mb-6 font-mono text-brand">Judging Rubric (100 Pts)</h2>
-                    <div class="bg-dark-bg p-6 rounded-lg tech-border">
-                        <div class="flex items-center justify-between mb-4 border-b border-gray-700 pb-2">
-                            <span class="text-xl font-bold">The Pitch</span>
-                            <span class="text-brand font-mono">50 pts</span>
-                        </div>
-                        <ul class="text-sm text-gray-400 space-y-2 mb-6">
-                            <li class="flex justify-between"><span>Problem Relevance</span> <span>15 pts</span></li>
-                            <li class="flex justify-between"><span>Solution & Vision</span> <span>15 pts</span></li>
-                            <li class="flex justify-between"><span>Communication Clarity</span> <span>10 pts</span></li>
-                            <li class="flex justify-between"><span>Impact & User Case</span> <span>10 pts</span></li>
-                        </ul>
-
-                        <div class="flex items-center justify-between mb-4 border-b border-gray-700 pb-2">
-                            <span class="text-xl font-bold">The Project</span>
-                            <span class="text-brand font-mono">50 pts</span>
-                        </div>
-                        <ul class="text-sm text-gray-400 space-y-2">
-                            <li class="flex justify-between"><span>Functionality</span> <span>15 pts</span></li>
-                            <li class="flex justify-between"><span>Technical Difficulty</span> <span>10 pts</span></li>
-                            <li class="flex justify-between"><span>UX & Design</span> <span>10 pts</span></li>
-                            <li class="flex justify-between"><span>Values Alignment</span> <span>10 pts</span></li>
-                            <li class="flex justify-between"><span>Scalability</span> <span>5 pts</span></li>
-                        </ul>
-                    </div>
-                </div>
-
             </div>
         </div>
     </section>
 
-    <section id="register" class="py-20 bg-dark-bg text-center">
-        <div class="max-w-3xl mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-4">Ready to Build?</h2>
-            <p class="text-gray-400 mb-8">
-                Teams up to 4 members allowed. Every participant must register individually.
+    <section id="judges" class="py-20 bg-gradient-to-br from-gray-900 to-gray-800 border-t border-gray-700">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <span class="inline-block py-1 px-3 rounded bg-blue-900 text-blue-300 text-xs font-bold tracking-wider mb-4">EXPERTS ONLY</span>
+            <h2 class="text-3xl font-bold text-white mb-6">Call for Judges</h2>
+            <p class="text-xl text-gray-300 mb-8">
+                We are looking for industry leaders and technical experts to evaluate the next generation of builders. 
+                <br><em>Note: There are only <span class="text-brand font-bold">4 judge spots</span> available.</em>
             </p>
             
-            <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-2xl border border-gray-700 max-w-md mx-auto relative overflow-hidden">
-                <div class="absolute top-0 right-0 bg-brand text-dark-bg text-xs font-bold px-3 py-1">OPEN</div>
-                <h3 class="text-2xl font-bold mb-2">Participant Pass</h3>
-                <div class="text-4xl font-mono font-bold text-brand mb-4">$15.00</div>
-                <p class="text-sm text-gray-400 mb-6">Includes event access, snacks, and entry to the awards ceremony.</p>
-                
-                <div class="space-y-3">
-                    <button class="w-full bg-brand hover:bg-brand-light text-dark-bg font-bold py-3 rounded transition">
-                        Register Individual
-                    </button>
-                    <button class="w-full bg-transparent border border-gray-600 hover:border-brand text-white py-3 rounded transition">
-                        Register Team
-                    </button>
-                </div>
-                <p class="text-xs text-gray-500 mt-4">Registration closes Aug 7th to finalize logistics.</p>
+            <div class="bg-dark-bg p-8 rounded-xl border border-gray-600 max-w-2xl mx-auto text-left">
+                <h3 class="text-lg font-bold text-white mb-4">Responsibilities</h3>
+                <ul class="space-y-2 text-gray-400 mb-8">
+                    <li><i class="fa-solid fa-check text-brand mr-2"></i>Evaluate pitch delivery and technical execution.</li>
+                    <li><i class="fa-solid fa-check text-brand mr-2"></i>Provide constructive feedback during Q&A.</li>
+                    <li><i class="fa-solid fa-check text-brand mr-2"></i>Select winners based on the official 100-point rubric.</li>
+                </ul>
+                <a href="#judge-form-link" class="block w-full text-center bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-bold py-3 rounded-lg transition duration-300 uppercase tracking-wide">
+                    Apply to be a Judge
+                </a>
             </div>
         </div>
     </section>
 
-    <footer class="bg-black py-8 border-t border-gray-800">
+    <section id="register" class="py-24 bg-dark-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 font-mono">Get Involved</h2>
+                <p class="text-gray-400">Registration closes <span class="text-white font-bold">Aug 7th</span>. Choose your path below.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                
+                <div class="bg-dark-card border border-gray-700 rounded-2xl p-8 hover:border-brand transition duration-300 flex flex-col">
+                    <div class="mb-4">
+                        <i class="fa-solid fa-user text-3xl text-brand"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Solo Hacker</h3>
+                    <p class="text-gray-400 mb-6 flex-grow">Register as an individual. You can form a team later or work alone.</p>
+                    <div class="text-3xl font-mono font-bold text-white mb-6">$15.00</div>
+                    <a href="#individual-form" class="w-full bg-brand hover:bg-brand-light text-dark-bg font-bold py-3 rounded text-center transition">
+                        Register Solo
+                    </a>
+                </div>
+
+                <div class="bg-dark-card border border-gray-700 rounded-2xl p-8 hover:border-brand transition duration-300 flex flex-col relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-gray-700 text-xs font-bold px-3 py-1 text-gray-300">POPULAR</div>
+                    <div class="mb-4">
+                        <i class="fa-solid fa-users text-3xl text-blue-500"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Team Entry</h3>
+                    <p class="text-gray-400 mb-6 flex-grow">Register a team of up to 4 members. One form submission per team.</p>
+                    <div class="text-3xl font-mono font-bold text-white mb-6">$15 <span class="text-sm font-sans text-gray-500 font-normal">/person</span></div>
+                    <a href="#team-form" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded text-center transition">
+                        Register Team
+                    </a>
+                </div>
+
+                <div class="bg-dark-card border border-gray-700 rounded-2xl p-8 hover:border-white transition duration-300 flex flex-col">
+                    <div class="mb-4">
+                        <i class="fa-solid fa-gavel text-3xl text-purple-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Judge</h3>
+                    <p class="text-gray-400 mb-6 flex-grow">Apply to evaluate projects. Limited to 4 spots.</p>
+                    <div class="text-3xl font-mono font-bold text-white mb-6">Free</div>
+                    <a href="#judge-form-link" class="w-full bg-transparent border border-gray-600 hover:border-white text-white font-bold py-3 rounded text-center transition">
+                        Apply Now
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black py-8 border-t border-gray-800 mt-10">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-gray-500 mb-2">&copy; 2026 Chicago Area Hackathon / ICN.</p>
+            <p class="text-gray-500 mb-2">&copy; 2026 Chicago Area Hackathon.</p>
             <p class="text-xs text-gray-600">Built for the community.</p>
         </div>
     </footer>
