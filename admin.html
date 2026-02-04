@@ -96,84 +96,85 @@
     </div>
 
     <script>
-        // --- 1. DEFINE UI FUNCTIONS FIRST ---
-        // This ensures the "Unlock" button exists even if DB connection fails later
-        const ADMIN_CODE = "secure123"; 
+        // --- CONFIGURATION ---
+        // REPLACE THIS WITH YOUR DEPLOYED CLOUDFLARE WORKER URL
+        const API_URL = 'https://your-hackathon-backend.workers.dev';
+        
+        async function login() {
+            const secretCode = document.getElementById('secretCode').value;
+            const btn = document.querySelector('button');
+            
+            btn.innerText = "Verifying...";
+            btn.disabled = true;
 
-        function login() {
-            const input = document.getElementById('secretCode').value;
-            if(input === ADMIN_CODE) {
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                fetchData();
-            } else {
-                alert("Access Denied");
+            try {
+                // We try to fetch data using the code. If code is wrong, backend returns 401
+                const response = await fetch(`${API_URL}/admin-data`, {
+                    method: 'GET',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-admin-code': secretCode 
+                    }
+                });
+
+                if (response.status === 401) {
+                    alert("Incorrect Code");
+                    btn.innerText = "Unlock Database";
+                    btn.disabled = false;
+                    return;
+                }
+
+                if (response.ok) {
+                    const data = await response.json();
+                    renderDashboard(data);
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                }
+            } catch (err) {
+                alert("Connection Error");
+                console.error(err);
+                btn.innerText = "Unlock Database";
+                btn.disabled = false;
             }
         }
 
-        // --- 2. DATABASE CONFIGURATION ---
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; 
-        const SUPABASE_KEY = 'YOUR_SUPABASE_KEY'; 
+        function renderDashboard(data) {
+            // 1. Teams
+            document.getElementById('countTeams').innerText = data.teams.length;
+            const teamsHtml = data.teams.map(t => `
+                <tr class="hover:bg-gray-700">
+                    <td class="p-3 font-bold text-white">${t.team_name}</td>
+                    <td class="p-3">${t.member_names}</td>
+                    <td class="p-3">${new Date(t.created_at).toLocaleDateString()}</td>
+                </tr>`).join('');
+            document.getElementById('teamsTable').innerHTML = teamsHtml;
 
-        // Safe Init
-        let supabase;
-        try {
-            if (window.supabase) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            } else {
-                console.error("Supabase library not loaded.");
-            }
-        } catch (err) { console.error(err); }
+            // 2. Solos
+            document.getElementById('countSolo').innerText = data.solos.length;
+            const soloHtml = data.solos.map(s => `
+                <tr class="hover:bg-gray-700">
+                    <td class="p-3 font-bold text-white">${s.first_name} ${s.last_name}</td>
+                    <td class="p-3">${s.email}<br><span class="text-xs text-gray-500">${s.phone || 'NA'}</span></td>
+                    <td class="p-3 text-xs">
+                        ${s.guardian_name ? `Parent: ${s.guardian_name}<br>` : ''}
+                        ${s.guardian_email ? `Email: ${s.guardian_email}` : ''}
+                    </td>
+                    <td class="p-3">${s.grade_level || '-'}</td>
+                    <td class="p-3 font-mono font-bold text-brand">${s.coding_level}/10</td>
+                </tr>`).join('');
+            document.getElementById('soloTable').innerHTML = soloHtml;
 
-        // --- 3. FETCH DATA ---
-        async function fetchData() {
-            if(!supabase) return alert("Database connection failed. Check console.");
-
-            // Fetch Teams
-            const { data: teams } = await supabase.from('teams').select('*');
-            if(teams) {
-                document.getElementById('countTeams').innerText = teams.length;
-                const teamsHtml = teams.map(t => `
-                    <tr class="hover:bg-gray-700">
-                        <td class="p-3 font-bold text-white">${t.team_name}</td>
-                        <td class="p-3">${t.member_names}</td>
-                        <td class="p-3">${new Date(t.created_at).toLocaleDateString()}</td>
-                    </tr>`).join('');
-                document.getElementById('teamsTable').innerHTML = teamsHtml;
-            }
-
-            // Fetch Solos
-            const { data: solos } = await supabase.from('individual_hackers').select('*');
-            if(solos) {
-                document.getElementById('countSolo').innerText = solos.length;
-                const soloHtml = solos.map(s => `
-                    <tr class="hover:bg-gray-700">
-                        <td class="p-3 font-bold text-white">${s.first_name} ${s.last_name}</td>
-                        <td class="p-3">${s.email}<br><span class="text-xs text-gray-500">${s.phone || 'NA'}</span></td>
-                        <td class="p-3 text-xs">
-                            ${s.guardian_name ? `Parent: ${s.guardian_name}<br>` : ''}
-                            ${s.guardian_email ? `Email: ${s.guardian_email}` : ''}
-                        </td>
-                        <td class="p-3">${s.grade_level || '-'}</td>
-                        <td class="p-3 font-mono font-bold text-brand">${s.coding_level}/10</td>
-                    </tr>`).join('');
-                document.getElementById('soloTable').innerHTML = soloHtml;
-            }
-
-            // Fetch Judges
-            const { data: judges } = await supabase.from('judges').select('*');
-            if(judges) {
-                document.getElementById('countJudges').innerText = judges.length;
-                const judgeHtml = judges.map(j => `
-                    <tr class="hover:bg-gray-700">
-                        <td class="p-3 font-bold text-white">${j.first_name} ${j.last_name}</td>
-                        <td class="p-3">${j.email}<br><span class="text-xs text-gray-500">${j.phone}</span></td>
-                        <td class="p-3">${j.job_title}</td>
-                        <td class="p-3 text-xs max-w-xs truncate" title="${j.reason_to_judge}">${j.reason_to_judge}</td>
-                        <td class="p-3 text-xs max-w-xs truncate" title="${j.value_add}">${j.value_add}</td>
-                    </tr>`).join('');
-                document.getElementById('judgeTable').innerHTML = judgeHtml;
-            }
+            // 3. Judges
+            document.getElementById('countJudges').innerText = data.judges.length;
+            const judgeHtml = data.judges.map(j => `
+                <tr class="hover:bg-gray-700">
+                    <td class="p-3 font-bold text-white">${j.first_name} ${j.last_name}</td>
+                    <td class="p-3">${j.email}<br><span class="text-xs text-gray-500">${j.phone}</span></td>
+                    <td class="p-3">${j.job_title}</td>
+                    <td class="p-3 text-xs max-w-xs truncate" title="${j.reason_to_judge}">${j.reason_to_judge}</td>
+                    <td class="p-3 text-xs max-w-xs truncate" title="${j.value_add}">${j.value_add}</td>
+                </tr>`).join('');
+            document.getElementById('judgeTable').innerHTML = judgeHtml;
         }
     </script>
 </body>
