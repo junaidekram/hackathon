@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ICN Hackathon 2026 | Chicago Area</title>
-    
     <link rel="icon" type="image/png" href="icon.png">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -27,6 +26,11 @@
         body { background-color: #0f172a; color: #e2e8f0; }
         .tech-border { border: 1px solid #334155; }
         .hero-pattern { background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 30px 30px; }
+        .modal { opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        .modal.active { opacity: 1; visibility: visible; }
+        /* Custom Range Slider */
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #10b981; margin-top: -6px; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #334155; border-radius: 2px; }
     </style>
 </head>
 <body class="antialiased font-sans">
@@ -102,44 +106,37 @@
     <section id="schedule" class="py-20 bg-dark-bg relative">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold mb-12 text-center font-mono">Event Timeline</h2>
-            
             <div class="relative border-l-2 border-gray-700 ml-4 space-y-12">
-                
                 <div class="relative pl-8 group">
                     <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-brand group-hover:animate-pulse"></div>
                     <div class="text-sm text-brand font-mono mb-1">Sun, Aug 2 @ 9:00 AM</div>
                     <h3 class="text-xl font-bold text-white">Kickoff & Theme Release</h3>
                     <p class="text-gray-400">User manual release. Hacking begins immediately.</p>
                 </div>
-
                 <div class="relative pl-8">
                     <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-gray-600"></div>
                     <div class="text-sm text-gray-400 font-mono mb-1">Fri, Aug 7 @ 6:00 PM</div>
                     <h3 class="text-xl font-bold text-white">Pitch Signup Deadline</h3>
                     <p class="text-gray-400">Last chance to sign up for pitching to be eligible for awards.</p>
                 </div>
-
                 <div class="relative pl-8">
                     <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-gray-600"></div>
                     <div class="text-sm text-gray-400 font-mono mb-1">Sat, Aug 8 @ 6:00 PM</div>
                     <h3 class="text-xl font-bold text-white">Pitch Schedule Released</h3>
                     <p class="text-gray-400">Teams will receive their presentation slots.</p>
                 </div>
-
                 <div class="relative pl-8 group">
                     <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-red-500"></div>
                     <div class="text-sm text-red-400 font-mono mb-1">Sun, Aug 9 @ 9:00 AM</div>
                     <h3 class="text-xl font-bold text-white">Code Freeze</h3>
                     <p class="text-gray-400">Last commits into GitHub. Later commits result in penalties.</p>
                 </div>
-
                 <div class="relative pl-8">
                     <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-brand"></div>
                     <div class="text-sm text-brand font-mono mb-1">Sun, Aug 9 @ 9:30 AM - 6:00 PM</div>
                     <h3 class="text-xl font-bold text-white">Pitches & Awards Ceremony</h3>
                     <p class="text-gray-400">Judging begins at 9:30 AM. Awards ceremony concludes the event at 6:00 PM.</p>
                 </div>
-
             </div>
         </div>
     </section>
@@ -150,11 +147,9 @@
                 <h2 class="text-3xl font-bold font-mono text-white">The Pitch Manifesto</h2>
                 <p class="text-gray-400 mt-2">Pitches start Sun, Aug 9 at 9:30 a.m. Slides are optional, but clarity is mandatory.</p>
             </div>
-
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="bg-dark-bg p-8 rounded-xl border border-gray-700">
                     <h3 class="text-xl font-bold text-brand mb-6"><i class="fa-solid fa-list-check mr-2"></i>Required Content</h3>
-                    <p class="text-sm text-gray-400 mb-4">You must address these 7 points during your demo:</p>
                     <ol class="space-y-3 text-gray-300 list-decimal list-inside marker:text-brand marker:font-bold">
                         <li><strong>The Idea:</strong> What was your original concept?</li>
                         <li><strong>The Goal:</strong> What were you trying to achieve?</li>
@@ -165,30 +160,20 @@
                         <li><strong>Q&A:</strong> Answer questions from the judges.</li>
                     </ol>
                 </div>
-
                 <div class="bg-dark-bg p-8 rounded-xl border border-gray-700">
                     <h3 class="text-xl font-bold text-brand mb-6"><i class="fa-solid fa-microphone-lines mr-2"></i>Presentation Style</h3>
                     <ul class="space-y-4">
                         <li class="flex items-start">
                             <i class="fa-solid fa-users-viewfinder mt-1 mr-3 text-blue-400"></i>
-                            <div>
-                                <strong class="text-white">Team Effort</strong>
-                                <p class="text-gray-400 text-sm">Every member must participate equally. No confusion on who is speaking next.</p>
-                            </div>
+                            <div><strong class="text-white">Team Effort</strong><p class="text-gray-400 text-sm">Every member must participate equally.</p></div>
                         </li>
                         <li class="flex items-start">
                             <i class="fa-regular fa-eye mt-1 mr-3 text-blue-400"></i>
-                            <div>
-                                <strong class="text-white">Engagement</strong>
-                                <p class="text-gray-400 text-sm">Maintain eye contact. Do not read directly off a paper or slides.</p>
-                            </div>
+                            <div><strong class="text-white">Engagement</strong><p class="text-gray-400 text-sm">Maintain eye contact. Do not read directly off a paper.</p></div>
                         </li>
                         <li class="flex items-start">
                             <i class="fa-solid fa-check-double mt-1 mr-3 text-blue-400"></i>
-                            <div>
-                                <strong class="text-white">Preparation</strong>
-                                <p class="text-gray-400 text-sm">Minimal stuttering. Know your lines and your code.</p>
-                            </div>
+                            <div><strong class="text-white">Preparation</strong><p class="text-gray-400 text-sm">Minimal stuttering. Know your lines.</p></div>
                         </li>
                     </ul>
                 </div>
@@ -200,21 +185,16 @@
         <div class="max-w-4xl mx-auto px-4 text-center">
             <span class="inline-block py-1 px-3 rounded bg-blue-900 text-blue-300 text-xs font-bold tracking-wider mb-4">EXPERTS ONLY</span>
             <h2 class="text-3xl font-bold text-white mb-6">Call for Judges</h2>
-            <p class="text-xl text-gray-300 mb-8">
-                We are looking for industry leaders and technical experts to evaluate the next generation of builders. 
-                <br><em>Note: There are only <span class="text-brand font-bold">4 judge spots</span> available.</em>
-            </p>
-            
+            <p class="text-xl text-gray-300 mb-8">We are looking for industry leaders. <br><em>Note: Only <span class="text-brand font-bold">4 spots</span> available.</em></p>
             <div class="bg-dark-bg p-8 rounded-xl border border-gray-600 max-w-2xl mx-auto text-left">
                 <h3 class="text-lg font-bold text-white mb-4">Responsibilities</h3>
                 <ul class="space-y-2 text-gray-400 mb-8">
                     <li><i class="fa-solid fa-check text-brand mr-2"></i>Evaluate pitch delivery and technical execution.</li>
-                    <li><i class="fa-solid fa-check text-brand mr-2"></i>Provide constructive feedback during Q&A.</li>
-                    <li><i class="fa-solid fa-check text-brand mr-2"></i>Select winners based on the official 100-point rubric.</li>
+                    <li><i class="fa-solid fa-check text-brand mr-2"></i>Select winners based on the rubric.</li>
                 </ul>
-                <a href="#judge-form-link" class="block w-full text-center bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-bold py-3 rounded-lg transition duration-300 uppercase tracking-wide">
+                <button onclick="openModal('judgeModal')" class="block w-full text-center bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-bold py-3 rounded-lg transition duration-300 uppercase tracking-wide">
                     Apply to be a Judge
-                </a>
+                </button>
             </div>
         </div>
     </section>
@@ -223,48 +203,31 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-bold mb-4 font-mono">Get Involved</h2>
-                <p class="text-gray-400">Registration closes <span class="text-white font-bold">Aug 7th</span>. Choose your path below.</p>
+                <p class="text-gray-400">Registration closes <span class="text-white font-bold">Aug 7th</span>.</p>
             </div>
-
             <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                
                 <div class="bg-dark-card border border-gray-700 rounded-2xl p-8 hover:border-brand transition duration-300 flex flex-col">
-                    <div class="mb-4">
-                        <i class="fa-solid fa-user text-3xl text-brand"></i>
-                    </div>
+                    <div class="mb-4"><i class="fa-solid fa-user text-3xl text-brand"></i></div>
                     <h3 class="text-2xl font-bold text-white mb-2">Solo Hacker</h3>
-                    <p class="text-gray-400 mb-6 flex-grow">Register as an individual. You can form a team later or work alone.</p>
+                    <p class="text-gray-400 mb-6 flex-grow">Register as an individual.</p>
                     <div class="text-3xl font-mono font-bold text-white mb-6">$15.00</div>
-                    <a href="#individual-form" class="w-full bg-brand hover:bg-brand-light text-dark-bg font-bold py-3 rounded text-center transition">
-                        Register Solo
-                    </a>
+                    <button onclick="openModal('soloModal')" class="w-full bg-brand hover:bg-brand-light text-dark-bg font-bold py-3 rounded text-center transition">Register Solo</button>
                 </div>
-
                 <div class="bg-dark-card border border-gray-700 rounded-2xl p-8 hover:border-brand transition duration-300 flex flex-col relative overflow-hidden">
                     <div class="absolute top-0 right-0 bg-gray-700 text-xs font-bold px-3 py-1 text-gray-300">POPULAR</div>
-                    <div class="mb-4">
-                        <i class="fa-solid fa-users text-3xl text-blue-500"></i>
-                    </div>
+                    <div class="mb-4"><i class="fa-solid fa-users text-3xl text-blue-500"></i></div>
                     <h3 class="text-2xl font-bold text-white mb-2">Team Entry</h3>
-                    <p class="text-gray-400 mb-6 flex-grow">Register a team of up to 4 members. One form submission per team.</p>
+                    <p class="text-gray-400 mb-6 flex-grow">Register a team of up to 4 members.</p>
                     <div class="text-3xl font-mono font-bold text-white mb-6">$15 <span class="text-sm font-sans text-gray-500 font-normal">/person</span></div>
-                    <a href="#team-form" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded text-center transition">
-                        Register Team
-                    </a>
+                    <button onclick="openModal('teamModal')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded text-center transition">Register Team</button>
                 </div>
-
                 <div class="bg-dark-card border border-gray-700 rounded-2xl p-8 hover:border-white transition duration-300 flex flex-col">
-                    <div class="mb-4">
-                        <i class="fa-solid fa-gavel text-3xl text-purple-400"></i>
-                    </div>
+                    <div class="mb-4"><i class="fa-solid fa-gavel text-3xl text-purple-400"></i></div>
                     <h3 class="text-2xl font-bold text-white mb-2">Judge</h3>
-                    <p class="text-gray-400 mb-6 flex-grow">Apply to evaluate projects. Limited to 4 spots.</p>
+                    <p class="text-gray-400 mb-6 flex-grow">Apply to evaluate projects.</p>
                     <div class="text-3xl font-mono font-bold text-white mb-6">Free</div>
-                    <a href="#judge-form-link" class="w-full bg-transparent border border-gray-600 hover:border-white text-white font-bold py-3 rounded text-center transition">
-                        Apply Now
-                    </a>
+                    <button onclick="openModal('judgeModal')" class="w-full bg-transparent border border-gray-600 hover:border-white text-white font-bold py-3 rounded text-center transition">Apply Now</button>
                 </div>
-
             </div>
         </div>
     </section>
@@ -272,9 +235,225 @@
     <footer class="bg-black py-8 border-t border-gray-800 mt-10">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <p class="text-gray-500 mb-2">&copy; 2026 Chicago Area Hackathon.</p>
-            <p class="text-xs text-gray-600">Built for the community.</p>
         </div>
     </footer>
 
+    <div id="soloModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-dark-card border border-gray-700 w-full max-w-lg p-6 rounded-xl shadow-2xl relative my-8">
+            <button onclick="closeModal('soloModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark fa-xl"></i></button>
+            
+            <div class="mb-6 border-b border-gray-700 pb-4">
+                <h3 class="text-xl font-bold font-mono text-brand">Chicago Area Hackathon Registration 26</h3>
+                <p class="text-sm text-gray-400">Register for the ICN Hackathon<br>Dates: Sun Aug 2 2026 - Sun Aug 9 2026</p>
+                <div class="text-xs text-gray-500 mt-2">
+                    For questions: Junaid Ekram (junaidekram@gmail.com) | Aqra Irawan (aqraman10@gmail.com)
+                </div>
+                <p class="text-xs text-red-400 mt-2">* Indicates required question</p>
+            </div>
+
+            <form onsubmit="submitSolo(event)" class="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs text-gray-400">Participants First Name *</label>
+                        <input type="text" id="s_firstName" required class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400">Participants Last Name *</label>
+                        <input type="text" id="s_lastName" required class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="text-xs text-gray-400">Participants Email *</label>
+                    <input type="email" id="s_email" required class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                </div>
+
+                <div>
+                    <label class="text-xs text-gray-400">Participants Phone Number (Type NA if none)</label>
+                    <input type="text" id="s_phone" class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                </div>
+
+                <div class="border-t border-gray-700 pt-2">
+                    <label class="text-xs text-gray-400">Participants Guardian's Full Name</label>
+                    <input type="text" id="s_guardName" class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400">Guardian's Phone Number</label>
+                    <input type="text" id="s_guardPhone" class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400">Guardian's Email</label>
+                    <input type="email" id="s_guardEmail" class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                </div>
+
+                <div>
+                    <label class="text-xs text-gray-400">Participants Grade Level</label>
+                    <input type="text" id="s_grade" class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                </div>
+
+                <div>
+                    <label class="text-xs text-gray-400 block mb-2">Participants Coding Level</label>
+                    <div class="flex items-center gap-2 text-[10px] text-gray-500">
+                        <span class="w-24">I barely have any coding experience</span>
+                        <input type="range" id="s_coding" min="1" max="10" value="5" class="flex-grow h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                        <span class="w-24 text-right">I know all about coding and I can make anything</span>
+                    </div>
+                    <div class="text-center text-brand font-bold mt-1" id="codingVal">5</div>
+                </div>
+
+                <button type="submit" class="w-full bg-brand hover:bg-brand-light text-dark-bg font-bold py-3 rounded">Submit Registration</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="teamModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="bg-dark-card border border-gray-700 w-full max-w-lg p-6 rounded-xl shadow-2xl relative">
+            <button onclick="closeModal('teamModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark fa-xl"></i></button>
+            
+            <div class="mb-6 border-b border-gray-700 pb-4">
+                <h3 class="text-xl font-bold font-mono text-blue-500">Chicago Area Hackathon Registration 26</h3>
+                <p class="text-sm text-gray-400">Register for the ICN Hackathon<br>Dates: Sun Aug 2 2026 - Sun Aug 9 2026</p>
+                <p class="text-xs text-orange-300 mt-2 font-bold">Important: Each participant must complete the registration form individually before registering as a team. Max 4 people.</p>
+                <div class="text-xs text-gray-500 mt-2">
+                    For questions: Junaid Ekram (junaidekram@gmail.com) | Aqra Irawan (aqraman10@gmail.com)
+                </div>
+                <p class="text-xs text-red-400 mt-2">* Indicates required question</p>
+            </div>
+
+            <form onsubmit="submitTeam(event)" class="space-y-4">
+                <div>
+                    <label class="text-xs text-gray-400">Team Name *</label>
+                    <input type="text" id="t_teamName" required class="w-full bg-dark-bg border border-gray-600 rounded p-3 text-white focus:border-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400">Full Names of All Participants (Split by commas) *</label>
+                    <textarea id="t_members" rows="4" required placeholder="e.g. John Doe, Jane Smith, Alex Jones" class="w-full bg-dark-bg border border-gray-600 rounded p-3 text-white focus:border-blue-500 outline-none"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded">Submit Team</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="judgeModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-dark-card border border-gray-700 w-full max-w-lg p-6 rounded-xl shadow-2xl relative my-8">
+            <button onclick="closeModal('judgeModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark fa-xl"></i></button>
+            
+            <div class="mb-6 border-b border-gray-700 pb-4">
+                <h3 class="text-xl font-bold font-mono text-purple-400">Chicago Area Hackathon Judge Application 26</h3>
+                <p class="text-sm text-gray-400">Dates: Sun Aug 2 2026 - Sun Aug 9 2026</p>
+                <p class="text-xs text-gray-300 mt-2">You will receive an email saying if you have been accepted or not. If accepted, it will contain all necessary info.</p>
+                <div class="text-xs text-gray-500 mt-2">
+                    For questions: Junaid Ekram (junaidekram@gmail.com) | Aqra Irawan (aqraman10@gmail.com)
+                </div>
+                <p class="text-xs text-red-400 mt-2">* Indicates required question</p>
+            </div>
+
+            <form onsubmit="submitJudge(event)" class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs text-gray-400">First Name *</label>
+                        <input type="text" id="j_firstName" required class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400">Last Name *</label>
+                        <input type="text" id="j_lastName" required class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400">Email *</label>
+                    <input type="email" id="j_email" required class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400">Phone Number *</label>
+                    <input type="text" id="j_phone" required class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400">Job (List all) *</label>
+                    <input type="text" id="j_job" required class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400">Experience with Coding and Software</label>
+                    <textarea id="j_exp" rows="2" class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400">Why should you be the judge? *</label>
+                    <textarea id="j_why" required rows="2" class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white"></textarea>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400">What value would you bring to the judging team? *</label>
+                    <textarea id="j_value" required rows="2" class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded">Submit Application</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; 
+        const SUPABASE_KEY = 'YOUR_SUPABASE_KEY'; 
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Modal Logic
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        
+        // Slider Logic
+        document.getElementById('s_coding').addEventListener('input', function(e) {
+            document.getElementById('codingVal').innerText = e.target.value;
+        });
+
+        // Form Handlers
+        async function submitSolo(e) {
+            e.preventDefault();
+            const data = {
+                first_name: document.getElementById('s_firstName').value,
+                last_name: document.getElementById('s_lastName').value,
+                email: document.getElementById('s_email').value,
+                phone: document.getElementById('s_phone').value,
+                guardian_name: document.getElementById('s_guardName').value,
+                guardian_phone: document.getElementById('s_guardPhone').value,
+                guardian_email: document.getElementById('s_guardEmail').value,
+                grade_level: document.getElementById('s_grade').value,
+                coding_level: document.getElementById('s_coding').value
+            };
+            
+            const { error } = await supabase.from('individual_hackers').insert([data]);
+            if(error) alert('Error: ' + error.message);
+            else { alert('Registered Successfully!'); closeModal('soloModal'); e.target.reset(); }
+        }
+
+        async function submitTeam(e) {
+            e.preventDefault();
+            const data = {
+                team_name: document.getElementById('t_teamName').value,
+                member_names: document.getElementById('t_members').value
+            };
+            
+            const { error } = await supabase.from('teams').insert([data]);
+            if(error) alert('Error: ' + error.message);
+            else { alert('Team Registered Successfully!'); closeModal('teamModal'); e.target.reset(); }
+        }
+
+        async function submitJudge(e) {
+            e.preventDefault();
+            const data = {
+                first_name: document.getElementById('j_firstName').value,
+                last_name: document.getElementById('j_lastName').value,
+                email: document.getElementById('j_email').value,
+                phone: document.getElementById('j_phone').value,
+                job_title: document.getElementById('j_job').value,
+                coding_experience: document.getElementById('j_exp').value,
+                reason_to_judge: document.getElementById('j_why').value,
+                value_add: document.getElementById('j_value').value
+            };
+            
+            const { error } = await supabase.from('judges').insert([data]);
+            if(error) alert('Error: ' + error.message);
+            else { alert('Application Submitted!'); closeModal('judgeModal'); e.target.reset(); }
+        }
+    </script>
 </body>
 </html>
