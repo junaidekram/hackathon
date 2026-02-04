@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Portal | ICN Hackathon</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-gray-200 font-sans p-8">
+
+    <div id="loginScreen" class="max-w-md mx-auto mt-20 text-center">
+        <h1 class="text-3xl font-bold mb-6"><i class="fa-solid fa-lock text-red-500 mr-2"></i>Admin Access</h1>
+        <input type="password" id="secretCode" placeholder="Enter Secure Code" class="w-full bg-gray-800 border border-gray-700 rounded p-3 text-white mb-4">
+        <button onclick="login()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded">Unlock Database</button>
+        <p class="text-xs text-gray-500 mt-4">Protected by ENV configuration</p>
+    </div>
+
+    <div id="dashboard" class="hidden max-w-6xl mx-auto">
+        <div class="flex justify-between items-center mb-8 border-b border-gray-700 pb-4">
+            <h1 class="text-2xl font-bold font-mono text-green-400">ADMIN_DASHBOARD</h1>
+            <button onclick="location.reload()" class="text-sm hover:text-white text-gray-400">Log Out</button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-6 mb-12">
+            <div class="bg-gray-800 p-6 rounded border border-gray-700">
+                <h3 class="text-gray-400 text-sm uppercase">Total Teams</h3>
+                <p class="text-4xl font-bold text-white" id="countTeams">-</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded border border-gray-700">
+                <h3 class="text-gray-400 text-sm uppercase">Solo Hackers</h3>
+                <p class="text-4xl font-bold text-white" id="countSolo">-</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded border border-gray-700">
+                <h3 class="text-gray-400 text-sm uppercase">Judge Apps</h3>
+                <p class="text-4xl font-bold text-white" id="countJudges">-</p>
+            </div>
+        </div>
+
+        <div class="space-y-12">
+            
+            <div>
+                <h2 class="text-xl font-bold mb-4 text-blue-400"><i class="fa-solid fa-users mr-2"></i>Registered Teams</h2>
+                <div class="overflow-x-auto bg-gray-800 rounded border border-gray-700">
+                    <table class="w-full text-left text-sm text-gray-400">
+                        <thead class="bg-gray-700 text-gray-200 uppercase">
+                            <tr>
+                                <th class="p-3">Team Name</th>
+                                <th class="p-3">Members (Comma Split)</th>
+                                <th class="p-3">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teamsTable" class="divide-y divide-gray-700"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-xl font-bold mb-4 text-green-400"><i class="fa-solid fa-user mr-2"></i>Solo Hackers</h2>
+                <div class="overflow-x-auto bg-gray-800 rounded border border-gray-700">
+                    <table class="w-full text-left text-sm text-gray-400">
+                        <thead class="bg-gray-700 text-gray-200 uppercase">
+                            <tr>
+                                <th class="p-3">Name</th>
+                                <th class="p-3">Email / Phone</th>
+                                <th class="p-3">Guardian Info</th>
+                                <th class="p-3">Grade</th>
+                                <th class="p-3">Coding Lvl</th>
+                            </tr>
+                        </thead>
+                        <tbody id="soloTable" class="divide-y divide-gray-700"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-xl font-bold mb-4 text-purple-400"><i class="fa-solid fa-gavel mr-2"></i>Judge Applications</h2>
+                <div class="overflow-x-auto bg-gray-800 rounded border border-gray-700">
+                    <table class="w-full text-left text-sm text-gray-400">
+                        <thead class="bg-gray-700 text-gray-200 uppercase">
+                            <tr>
+                                <th class="p-3">Name</th>
+                                <th class="p-3">Contact</th>
+                                <th class="p-3">Job</th>
+                                <th class="p-3">Why?</th>
+                                <th class="p-3">Value Add</th>
+                            </tr>
+                        </thead>
+                        <tbody id="judgeTable" class="divide-y divide-gray-700"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const ADMIN_CODE = "secure123"; 
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; 
+        const SUPABASE_KEY = 'YOUR_SUPABASE_KEY'; 
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        function login() {
+            const input = document.getElementById('secretCode').value;
+            if(input === ADMIN_CODE) {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                fetchData();
+            } else {
+                alert("Access Denied");
+            }
+        }
+
+        async function fetchData() {
+            // Fetch Teams
+            const { data: teams } = await supabase.from('teams').select('*');
+            document.getElementById('countTeams').innerText = teams.length;
+            const teamsHtml = teams.map(t => `
+                <tr class="hover:bg-gray-700">
+                    <td class="p-3 font-bold text-white">${t.team_name}</td>
+                    <td class="p-3">${t.member_names}</td>
+                    <td class="p-3">${new Date(t.created_at).toLocaleDateString()}</td>
+                </tr>`).join('');
+            document.getElementById('teamsTable').innerHTML = teamsHtml;
+
+            // Fetch Solos
+            const { data: solos } = await supabase.from('individual_hackers').select('*');
+            document.getElementById('countSolo').innerText = solos.length;
+            const soloHtml = solos.map(s => `
+                <tr class="hover:bg-gray-700">
+                    <td class="p-3 font-bold text-white">${s.first_name} ${s.last_name}</td>
+                    <td class="p-3">${s.email}<br><span class="text-xs text-gray-500">${s.phone || 'NA'}</span></td>
+                    <td class="p-3 text-xs">
+                        ${s.guardian_name ? `Parent: ${s.guardian_name}<br>` : ''}
+                        ${s.guardian_email ? `Email: ${s.guardian_email}` : ''}
+                    </td>
+                    <td class="p-3">${s.grade_level || '-'}</td>
+                    <td class="p-3 font-mono font-bold text-brand">${s.coding_level}/10</td>
+                </tr>`).join('');
+            document.getElementById('soloTable').innerHTML = soloHtml;
+
+            // Fetch Judges
+            const { data: judges } = await supabase.from('judges').select('*');
+            document.getElementById('countJudges').innerText = judges.length;
+            const judgeHtml = judges.map(j => `
+                <tr class="hover:bg-gray-700">
+                    <td class="p-3 font-bold text-white">${j.first_name} ${j.last_name}</td>
+                    <td class="p-3">${j.email}<br><span class="text-xs text-gray-500">${j.phone}</span></td>
+                    <td class="p-3">${j.job_title}</td>
+                    <td class="p-3 text-xs max-w-xs truncate" title="${j.reason_to_judge}">${j.reason_to_judge}</td>
+                    <td class="p-3 text-xs max-w-xs truncate" title="${j.value_add}">${j.value_add}</td>
+                </tr>`).join('');
+            document.getElementById('judgeTable').innerHTML = judgeHtml;
+        }
+    </script>
+</body>
+</html>
