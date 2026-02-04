@@ -8,7 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    
     <script>
         tailwind.config = {
             theme: {
@@ -28,7 +30,6 @@
         .hero-pattern { background-image: radial-gradient(#334155 1px, transparent 1px); background-size: 30px 30px; }
         .modal { opacity: 0; visibility: hidden; transition: all 0.3s ease; }
         .modal.active { opacity: 1; visibility: visible; }
-        /* Custom Range Slider */
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #10b981; margin-top: -6px; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #334155; border-radius: 2px; }
     </style>
@@ -390,24 +391,41 @@
     </div>
 
     <script>
-        // --- CONFIGURATION ---
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; 
-        const SUPABASE_KEY = 'YOUR_SUPABASE_KEY'; 
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // Modal Logic
+        // --- 1. DEFINE UI FUNCTIONS FIRST (So they work even if DB fails) ---
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         
         // Slider Logic
-        document.getElementById('s_coding').addEventListener('input', function(e) {
-            document.getElementById('codingVal').innerText = e.target.value;
+        document.addEventListener('DOMContentLoaded', () => {
+             const slider = document.getElementById('s_coding');
+             if(slider) {
+                 slider.addEventListener('input', function(e) {
+                    document.getElementById('codingVal').innerText = e.target.value;
+                 });
+             }
         });
 
-        // Form Handlers
+        // --- 2. DATABASE CONFIGURATION ---
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; 
+        const SUPABASE_KEY = 'YOUR_SUPABASE_KEY'; 
+        
+        // Safe Initialization
+        let supabase;
+        try {
+            if (window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            } else {
+                console.error("Supabase library not loaded. Check your internet connection or CDN link.");
+            }
+        } catch (err) {
+            console.error("Supabase Init Failed:", err);
+        }
+
+        // --- 3. FORM HANDLERS ---
         async function submitSolo(e) {
             e.preventDefault();
+            if (!supabase) return alert("Database not connected. Refresh the page.");
+
             const data = {
                 first_name: document.getElementById('s_firstName').value,
                 last_name: document.getElementById('s_lastName').value,
@@ -427,6 +445,8 @@
 
         async function submitTeam(e) {
             e.preventDefault();
+            if (!supabase) return alert("Database not connected. Refresh the page.");
+
             const data = {
                 team_name: document.getElementById('t_teamName').value,
                 member_names: document.getElementById('t_members').value
@@ -439,6 +459,8 @@
 
         async function submitJudge(e) {
             e.preventDefault();
+            if (!supabase) return alert("Database not connected. Refresh the page.");
+
             const data = {
                 first_name: document.getElementById('j_firstName').value,
                 last_name: document.getElementById('j_lastName').value,
