@@ -410,6 +410,51 @@
                     <div class="text-center text-brand font-bold mt-1" id="codingVal">5</div>
                 </div>
 
+                <!-- Advanced Information Section -->
+                <div class="border-t border-gray-700 pt-4 mt-2">
+                    <div class="mb-3">
+                        <h4 class="text-sm font-bold text-brand font-mono">Advanced Information <span class="text-gray-500 font-normal">(Optional)</span></h4>
+                        <p class="text-xs text-gray-400 mt-1">Help us know more about you — this section is optional but gives you opportunities to win extra prizes and get recognized!</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs text-gray-400">GitHub Profile URL</label>
+                            <input type="url" id="s_github" placeholder="https://github.com/yourusername" class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-gray-400">Portfolio / Personal Website URL</label>
+                            <input type="url" id="s_portfolio" placeholder="https://yourwebsite.com" class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-gray-400">Skills &amp; Technologies</label>
+                            <input type="text" id="s_skills" placeholder="e.g. Python, React, Machine Learning, Arduino" class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white">
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-gray-400">Past Projects</label>
+                            <textarea id="s_past_projects" rows="3" placeholder="Briefly describe any past projects you're proud of (apps, games, websites, etc.)" class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-gray-400">Experience &amp; Background</label>
+                            <textarea id="s_experience" rows="2" placeholder="Any relevant experience, internships, clubs, or coursework" class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-gray-400">Notable Achievements &amp; Awards</label>
+                            <textarea id="s_achievements" rows="2" placeholder="Competitions won, certifications, recognitions, etc." class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-gray-400">About Me / Bio</label>
+                            <textarea id="s_bio" rows="2" placeholder="Tell us a little about yourself and what motivates you" class="w-full bg-dark-bg border border-gray-600 rounded p-2 text-white"></textarea>
+                        </div>
+                    </div>
+                </div>
+
                 <button type="submit" class="w-full bg-brand hover:bg-brand-light text-dark-bg font-bold py-3 rounded">Submit Registration</button>
             </form>
         </div>
@@ -533,7 +578,15 @@
                 guardian_phone: document.getElementById('s_guardPhone').value,
                 guardian_email: document.getElementById('s_guardEmail').value,
                 grade_level: document.getElementById('s_grade').value,
-                coding_level: parseInt(document.getElementById('s_coding').value)
+                coding_level: parseInt(document.getElementById('s_coding').value),
+                // Advanced Information (optional)
+                github_url: document.getElementById('s_github').value,
+                portfolio_url: document.getElementById('s_portfolio').value,
+                skills: document.getElementById('s_skills').value,
+                past_projects: document.getElementById('s_past_projects').value,
+                experience: document.getElementById('s_experience').value,
+                achievements: document.getElementById('s_achievements').value,
+                bio: document.getElementById('s_bio').value
             };
 
             try {
