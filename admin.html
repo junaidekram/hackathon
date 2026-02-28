@@ -23,7 +23,7 @@
             <button onclick="location.reload()" class="text-sm hover:text-white text-gray-400">Log Out</button>
         </div>
 
-        <div class="grid grid-cols-3 gap-6 mb-12">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
             <div class="bg-gray-800 p-6 rounded border border-gray-700">
                 <h3 class="text-gray-400 text-sm uppercase">Total Teams</h3>
                 <p class="text-4xl font-bold text-white" id="countTeams">-</p>
@@ -35,6 +35,10 @@
             <div class="bg-gray-800 p-6 rounded border border-gray-700">
                 <h3 class="text-gray-400 text-sm uppercase">Judge Apps</h3>
                 <p class="text-4xl font-bold text-white" id="countJudges">-</p>
+            </div>
+            <div class="bg-gray-800 p-6 rounded border border-emerald-700">
+                <h3 class="text-emerald-400 text-sm uppercase">Sponsor Apps</h3>
+                <p class="text-4xl font-bold text-white" id="countSponsors">-</p>
             </div>
         </div>
 
@@ -92,6 +96,45 @@
                 </div>
             </div>
 
+            <!-- ── SPONSOR APPLICATIONS ─────────────────────────────────── -->
+            <div>
+                <h2 class="text-xl font-bold mb-4 text-emerald-400"><i class="fa-solid fa-handshake mr-2"></i>Sponsor Applications</h2>
+                <div class="overflow-x-auto bg-gray-800 rounded border border-gray-700">
+                    <table class="w-full text-left text-sm text-gray-400">
+                        <thead class="bg-gray-700 text-gray-200 uppercase">
+                            <tr>
+                                <th class="p-3">Company</th>
+                                <th class="p-3">Contact</th>
+                                <th class="p-3">Tier</th>
+                                <th class="p-3">Amount</th>
+                                <th class="p-3">Goals</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3">Date</th>
+                                <th class="p-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sponsorTable" class="divide-y divide-gray-700"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ── SPONSOR FORM CONFIGURATION ──────────────────────────── -->
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-yellow-400"><i class="fa-solid fa-sliders mr-2"></i>Sponsor Form Configuration</h2>
+                    <div class="flex gap-3 items-center">
+                        <span id="configSaveStatus" class="text-xs text-gray-500"></span>
+                        <button onclick="saveFormConfig()" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-white font-bold rounded text-sm transition">
+                            <i class="fa-solid fa-floppy-disk mr-1"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+                <p class="text-gray-500 text-sm mb-4">Toggle fields on/off and edit their labels. Changes affect what is visible on the public sponsor form.</p>
+                <div id="formConfigPanel" class="bg-gray-800 rounded border border-gray-700 divide-y divide-gray-700">
+                    <div class="p-6 text-center text-gray-500"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Loading config…</div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -99,6 +142,9 @@
         // --- CONFIGURATION ---
         // REPLACE THIS WITH YOUR DEPLOYED CLOUDFLARE WORKER URL
         const API_URL = 'https://red-cherry-8b7a.jtekram.workers.dev';
+
+        // Stored admin code for subsequent calls
+        let _adminCode = '';
         
         async function login() {
             const secretCode = document.getElementById('secretCode').value;
@@ -125,10 +171,12 @@
                 }
 
                 if (response.ok) {
+                    _adminCode = secretCode;
                     const data = await response.json();
                     renderDashboard(data);
                     document.getElementById('loginScreen').classList.add('hidden');
                     document.getElementById('dashboard').classList.remove('hidden');
+                    loadFormConfig();
                 }
             } catch (err) {
                 alert("Connection Error");
@@ -137,6 +185,22 @@
                 btn.disabled = false;
             }
         }
+
+        // Tier display names
+        const TIER_LABELS = {
+            title: '⭐ Title',
+            gold: '🥇 Gold',
+            silver: '🥈 Silver',
+            bronze: '🥉 Bronze',
+            community: '❤️ Community'
+        };
+        const TIER_COLORS = {
+            title: 'text-emerald-300 font-bold',
+            gold: 'text-yellow-400 font-bold',
+            silver: 'text-gray-300',
+            bronze: 'text-orange-400',
+            community: 'text-red-400'
+        };
 
         function renderDashboard(data) {
             // 1. Teams
@@ -175,6 +239,193 @@
                     <td class="p-3 text-xs max-w-xs truncate" title="${j.value_add}">${j.value_add}</td>
                 </tr>`).join('');
             document.getElementById('judgeTable').innerHTML = judgeHtml;
+
+            // 4. Sponsors
+            const sponsors = data.sponsors || [];
+            document.getElementById('countSponsors').innerText = sponsors.length;
+            const sponsorHtml = sponsors.length === 0
+                ? '<tr><td colspan="8" class="p-4 text-center text-gray-600">No sponsor applications yet.</td></tr>'
+                : sponsors.map(sp => {
+                    const tierCls = TIER_COLORS[sp.sponsorship_level] || '';
+                    const tierLabel = TIER_LABELS[sp.sponsorship_level] || sp.sponsorship_level;
+                    let goals = [];
+                    try { goals = JSON.parse(sp.sponsorship_goals || '[]'); } catch(e){}
+                    const statusColors = { pending: 'text-yellow-400', approved: 'text-green-400', rejected: 'text-red-400' };
+                    const statusCls = statusColors[sp.status] || 'text-gray-400';
+                    return `
+                        <tr class="hover:bg-gray-700">
+                            <td class="p-3 font-bold text-white">${sp.company_name}<br><span class="text-xs font-normal text-gray-500">${sp.company_website || ''}</span></td>
+                            <td class="p-3">${sp.primary_contact_name}<br><span class="text-xs text-gray-500">${sp.email}</span></td>
+                            <td class="p-3 ${tierCls}">${tierLabel}</td>
+                            <td class="p-3">${sp.sponsorship_amount || '—'}</td>
+                            <td class="p-3 text-xs max-w-xs">
+                                ${goals.slice(0, 3).join(', ')}${goals.length > 3 ? ` +${goals.length - 3} more` : ''}
+                            </td>
+                            <td class="p-3 font-bold ${statusCls} capitalize">${sp.status}</td>
+                            <td class="p-3 text-xs">${new Date(sp.created_at).toLocaleDateString()}</td>
+                            <td class="p-3 text-xs">
+                                <select onchange="updateSponsorStatus(${sp.id}, this.value)" class="bg-gray-700 border border-gray-600 text-white rounded p-1 text-xs">
+                                    <option value="pending" ${sp.status==='pending'?'selected':''}>Pending</option>
+                                    <option value="approved" ${sp.status==='approved'?'selected':''}>Approve</option>
+                                    <option value="rejected" ${sp.status==='rejected'?'selected':''}>Reject</option>
+                                </select>
+                            </td>
+                        </tr>`;
+                }).join('');
+            document.getElementById('sponsorTable').innerHTML = sponsorHtml;
+        }
+
+        // ── Sponsor status update ──────────────────────────────────────────────
+        async function updateSponsorStatus(id, status) {
+            try {
+                await fetch(`${API_URL}/update-sponsor-status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'x-admin-code': _adminCode },
+                    body: JSON.stringify({ id, status })
+                });
+            } catch (e) {
+                alert('Failed to update status.');
+            }
+        }
+
+        // ── Form Config ────────────────────────────────────────────────────────
+        let _formConfig = [];
+
+        async function loadFormConfig() {
+            try {
+                const res = await fetch(`${API_URL}/sponsor-form-config`, {
+                    headers: { 'x-admin-code': _adminCode }
+                });
+                if (res.ok) {
+                    _formConfig = await res.json();
+                    renderFormConfig(_formConfig);
+                } else {
+                    document.getElementById('formConfigPanel').innerHTML =
+                        '<div class="p-6 text-center text-gray-500">Form config not available (check worker setup).</div>';
+                }
+            } catch (e) {
+                document.getElementById('formConfigPanel').innerHTML =
+                    '<div class="p-6 text-center text-gray-500">Could not load form config.</div>';
+            }
+        }
+
+        // Section groupings for display
+        const CONFIG_SECTIONS = [
+            { prefix: 'sec_a', label: 'Section A — Sponsor Information' },
+            { prefix: 'sec_b', label: 'Section B — Sponsorship Selection' },
+            { prefix: 'sec_c', label: 'Section C — Sponsorship Goals' },
+            { prefix: 'sec_d', label: 'Section D — Event Participation' },
+            { prefix: 'sec_e', label: 'Section E — Challenge Prize' },
+            { prefix: 'sec_f', label: 'Section F — Recruiting' },
+            { prefix: 'sec_g', label: 'Section G — Branding + Marketing' },
+            { prefix: 'sec_h', label: 'Section H — Payment Details' },
+            { prefix: 'sec_i', label: 'Section I — Swag + Materials' },
+            { prefix: 'sec_j', label: 'Section J — Representatives' },
+            { prefix: 'sec_k', label: 'Section K — Legal Agreement' },
+            { prefix: 'sec_l', label: 'Section L — Additional Notes' },
+        ];
+
+        function renderFormConfig(config) {
+            const panel = document.getElementById('formConfigPanel');
+
+            // Group config items by section prefix
+            const grouped = {};
+            config.forEach(item => {
+                const sec = CONFIG_SECTIONS.find(s => item.field_key.startsWith(s.prefix));
+                const secKey = sec ? sec.prefix : 'other';
+                if (!grouped[secKey]) grouped[secKey] = { sectionLabel: sec ? sec.label : 'Other', items: [] };
+                grouped[secKey].items.push(item);
+            });
+
+            // A field_key is a section header if it has exactly one underscore
+            // e.g. "sec_a" is a header; "sec_a_email" is a field.
+            function isSectionHeader(fieldKey) {
+                return fieldKey.split('_').length === 2;
+            }
+
+            // Safely escape user-supplied text for use in HTML attribute values
+            function escAttr(str) {
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+            }
+
+            let html = '';
+            Object.keys(grouped).forEach(secKey => {
+                const group = grouped[secKey];
+                html += `<div class="p-4 bg-gray-750">
+                    <h3 class="text-sm font-bold text-yellow-300 mb-3 uppercase tracking-wider">${group.sectionLabel}</h3>
+                    <div class="space-y-2">`;
+                group.items.forEach(item => {
+                    const checked = item.enabled ? 'checked' : '';
+                    const rowBg = isSectionHeader(item.field_key) ? 'bg-gray-700' : 'bg-gray-800';
+                    html += `
+                        <div class="${rowBg} rounded p-3 flex items-center gap-3">
+                            <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                <input type="checkbox" data-key="${escAttr(item.field_key)}" class="config-toggle sr-only peer" ${checked}
+                                    onchange="markConfigDirty()">
+                                <div class="w-10 h-5 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:bg-emerald-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+                            </label>
+                            <div class="flex-1 min-w-0">
+                                <div class="text-xs text-gray-500 font-mono mb-1">${escAttr(item.field_key)}</div>
+                                <input type="text" data-key="${escAttr(item.field_key)}" class="config-label w-full bg-gray-900 border border-gray-600 rounded px-2 py-1 text-sm text-white"
+                                    value="${escAttr(item.label)}" oninput="markConfigDirty()">
+                            </div>
+                        </div>`;
+                });
+                html += `</div></div>`;
+            });
+
+            panel.innerHTML = html || '<div class="p-6 text-center text-gray-600">No configuration found.</div>';
+        }
+
+        function markConfigDirty() {
+            document.getElementById('configSaveStatus').textContent = '● Unsaved changes';
+            document.getElementById('configSaveStatus').className = 'text-xs text-yellow-400';
+        }
+
+        async function saveFormConfig() {
+            // Collect all current toggle + label values from the DOM
+            const toggles = document.querySelectorAll('.config-toggle');
+            const labels = document.querySelectorAll('.config-label');
+
+            const updates = {};
+            toggles.forEach(el => {
+                const key = el.dataset.key;
+                if (!updates[key]) updates[key] = {};
+                updates[key].enabled = el.checked ? 1 : 0;
+            });
+            labels.forEach(el => {
+                const key = el.dataset.key;
+                if (!updates[key]) updates[key] = {};
+                updates[key].label = el.value;
+            });
+
+            const payload = Object.entries(updates).map(([field_key, vals]) => ({ field_key, ...vals }));
+
+            const statusEl = document.getElementById('configSaveStatus');
+            statusEl.textContent = 'Saving…';
+            statusEl.className = 'text-xs text-gray-400';
+
+            try {
+                const res = await fetch(`${API_URL}/sponsor-form-config`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'x-admin-code': _adminCode },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    statusEl.textContent = '✓ Saved';
+                    statusEl.className = 'text-xs text-green-400';
+                    setTimeout(() => { statusEl.textContent = ''; }, 3000);
+                } else {
+                    throw new Error('Failed');
+                }
+            } catch (e) {
+                statusEl.textContent = '✗ Save failed';
+                statusEl.className = 'text-xs text-red-400';
+            }
         }
     </script>
 </body>

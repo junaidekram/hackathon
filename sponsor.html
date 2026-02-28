@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Us | ICN Hackathon 2026</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { light: '#34d399', DEFAULT: '#10b981', dark: '#064e3b' },
+                        dark: { bg: '#0f172a', card: '#1e293b' }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; }
+        .section-card { background: #1e293b; border: 1px solid #334155; border-radius: 1rem; padding: 2rem; margin-bottom: 1.5rem; }
+        .field-group { margin-bottom: 1.25rem; }
+        .field-label { display: block; font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.4rem; }
+        .field-required { color: #f87171; }
+        .form-input { width: 100%; background: #0f172a; border: 1px solid #475569; border-radius: 0.5rem; padding: 0.6rem 0.85rem; color: #e2e8f0; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+        .form-input:focus { border-color: #10b981; }
+        .form-textarea { width: 100%; background: #0f172a; border: 1px solid #475569; border-radius: 0.5rem; padding: 0.6rem 0.85rem; color: #e2e8f0; font-size: 0.95rem; outline: none; resize: vertical; transition: border-color 0.2s; }
+        .form-textarea:focus { border-color: #10b981; }
+        .checkbox-row { display: flex; align-items: flex-start; gap: 0.65rem; margin-bottom: 0.5rem; cursor: pointer; }
+        .checkbox-row input[type="checkbox"] { accent-color: #10b981; width: 1rem; height: 1rem; margin-top: 0.15rem; flex-shrink: 0; cursor: pointer; }
+        .radio-row { display: flex; align-items: flex-start; gap: 0.65rem; margin-bottom: 0.75rem; cursor: pointer; }
+        .radio-row input[type="radio"] { accent-color: #10b981; width: 1rem; height: 1rem; margin-top: 0.2rem; flex-shrink: 0; cursor: pointer; }
+        .section-title { font-size: 1.2rem; font-weight: 700; color: #10b981; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem; }
+        .section-desc { font-size: 0.85rem; color: #64748b; margin-bottom: 1.25rem; }
+        .tier-card { border: 2px solid #334155; border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 0.75rem; cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+        .tier-card:hover { border-color: #10b981; }
+        .tier-card.selected { border-color: #10b981; background: #064e3b22; }
+        .custom-entry { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+        .custom-entry input { flex: 1; }
+        .hidden-field { display: none !important; }
+        #successScreen { display: none; }
+    </style>
+</head>
+<body class="antialiased font-sans">
+
+    <!-- Nav -->
+    <nav class="fixed w-full z-50 bg-dark-bg/90 backdrop-blur-sm border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-3">
+                    <img src="icon.png" alt="ICN Hackathon Logo" class="h-10 w-auto object-contain">
+                    <span class="font-mono font-bold text-xl tracking-tighter">CHICAGO_AREA_HACKATHON</span>
+                </a>
+                <a href="index.html" class="text-gray-400 hover:text-white transition text-sm flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="pt-24 pb-10 px-4 text-center" style="background: radial-gradient(ellipse at top, #064e3b33 0%, transparent 60%);">
+        <span class="inline-block mb-4 px-3 py-1 rounded-full bg-brand/20 text-brand text-xs font-mono font-bold tracking-widest uppercase">
+            <i class="fa-solid fa-handshake mr-1"></i> Sponsorship Application
+        </span>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">
+            Partner with <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-light to-blue-400">Chicago's Hackathon</span>
+        </h1>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+            Reach the next generation of developers, designers, and innovators. Tiers start at <strong class="text-white">$50</strong>. Complete the form below and we'll be in touch within 48 hours.
+        </p>
+    </div>
+
+    <!-- Loading State -->
+    <div id="formLoading" class="max-w-3xl mx-auto px-4 py-20 text-center">
+        <i class="fa-solid fa-circle-notch fa-spin text-brand text-3xl mb-4"></i>
+        <p class="text-gray-400">Loading form…</p>
+    </div>
+
+    <!-- Success Screen -->
+    <div id="successScreen" class="max-w-2xl mx-auto px-4 py-20 text-center">
+        <i class="fa-solid fa-circle-check text-brand text-6xl mb-6"></i>
+        <h2 class="text-3xl font-bold text-white mb-4">Application Received!</h2>
+        <p class="text-gray-300 text-lg mb-8">Thank you for your interest in sponsoring the ICN Hackathon 2026. Our team will review your application and reach out within <strong class="text-white">48 hours</strong>.</p>
+        <a href="index.html" class="inline-flex items-center gap-2 px-8 py-3 bg-brand hover:bg-brand-light text-dark-bg font-bold rounded-lg transition">
+            <i class="fa-solid fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+
+    <!-- Sponsor Form -->
+    <form id="sponsorForm" class="max-w-3xl mx-auto px-4 pb-20" onsubmit="submitSponsor(event)" style="display:none;">
+
+        <!-- SECTION A -->
+        <div id="sec_a_wrap" class="section-card">
+            <div class="section-title"><i class="fa-solid fa-building"></i> <span id="lbl_sec_a">Section A — Sponsor Information</span></div>
+            <p class="section-desc">Tell us about your organization and the person we'll be working with.</p>
+
+            <div id="sec_a_company_name_wrap" class="field-group">
+                <label class="field-label"><span id="lbl_sec_a_company_name">Company Name</span> <span class="field-required">*</span></label>
+                <input type="text" id="a_company" name="company_name" required class="form-input">
+            </div>
+            <div id="sec_a_contact_name_wrap" class="field-group">
+                <label class="field-label"><span id="lbl_sec_a_contact_name">Primary Contact Name</span> <span class="field-required">*</span></label>
+                <input type="text" id="a_contact" name="primary_contact_name" required class="form-input">
+            </div>
+            <div id="sec_a_job_title_wrap" class="field-group">
+                <label class="field-label"><span id="lbl_sec_a_job_title">Job Title</span></label>
+                <input type="text" id="a_title" name="job_title" class="form-input">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div id="sec_a_email_wrap" class="field-group">
+                    <label class="field-label"><span id="lbl_sec_a_email">Email Address</span> <span class="field-required">*</span></label>
+                    <input type="email" id="a_email" name="email" required class="form-input">
+                </div>
+                <div id="sec_a_phone_wrap" class="field-group">
+                    <label class="field-label"><span id="lbl_sec_a_phone">Phone Number</span></label>
+                    <input type="tel" id="a_phone" name="phone" class="form-input">
+                </div>
+            </div>
+            <div id="sec_a_website_wrap" class="field-group">
+                <label class="field-label"><span id="lbl_sec_a_website">Company Website</span></label>
+                <input type="url" id="a_website" name="company_website" placeholder="https://" class="form-input">
+            </div>
+            <div id="sec_a_hq_location_wrap" class="field-group">
+                <label class="field-label"><span id="lbl_sec_a_hq_location">Headquarters Location</span></label>
+                <input type="text" id="a_hq" name="headquarters_location" placeholder="City, State" class="form-input">
+            </div>
+        </div>
+
+        <!-- SECTION B -->
+        <div id="sec_b_wrap" class="section-card">
+            <div class="section-title"><i class="fa-solid fa-star"></i> <span id="lbl_sec_b">Section B — Sponsorship Selection</span></div>
+            <p class="section-desc">Which sponsorship level are you interested in? <span class="field-required">*</span></p>
+
+            <div id="sec_b_title_wrap">
+                <label class="tier-card" id="tier_title">
+                    <div class="flex items-start gap-3">
+                        <input type="radio" name="sponsorship_level" value="title" required class="mt-1" onchange="selectTier('title')">
+                        <div>
+                            <div class="font-bold text-white text-lg"><span id="lbl_sec_b_title">⭐ Title Sponsor — $2,000–$3,500</span></div>
+                            <div class="text-xs text-gray-400 mt-1">Highest Sponsor Donator — Event named "Hackathon Presented by ___"</div>
+                            <ul class="text-xs text-gray-500 mt-2 space-y-0.5 list-disc list-inside">
+                                <li>Largest logo on all materials</li>
+                                <li>Opening ceremony recognition</li>
+                                <li>Dedicated judging seat &amp; workshop/demo session</li>
+                                <li>Prime booth, social media promotion, press announcements</li>
+                            </ul>
+                            <div class="text-xs text-brand mt-2">Best for: local tech companies, universities, STEM programs</div>
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <div id="sec_b_gold_wrap">
+                <label class="tier-card" id="tier_gold">
+                    <div class="flex items-start gap-3">
+                        <input type="radio" name="sponsorship_level" value="gold" class="mt-1" onchange="selectTier('gold')">
+                        <div>
+                            <div class="font-bold text-yellow-400 text-lg"><span id="lbl_sec_b_gold">🥇 Gold Sponsor — $1,000–$1,500</span></div>
+                            <div class="text-xs text-gray-400 mt-1">Your main sponsors.</div>
+                            <ul class="text-xs text-gray-500 mt-2 space-y-0.5 list-disc list-inside">
+                                <li>Large logo on website + posters</li>
+                                <li>Judge participation &amp; challenge prize sponsorship</li>
+                                <li>Workshop or mentoring opportunity</li>
+                                <li>Recruiting/resume access &amp; social media shoutouts</li>
+                            </ul>
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <div id="sec_b_silver_wrap">
+                <label class="tier-card" id="tier_silver">
+                    <div class="flex items-start gap-3">
+                        <input type="radio" name="sponsorship_level" value="silver" class="mt-1" onchange="selectTier('silver')">
+                        <div>
+                            <div class="font-bold text-gray-300 text-lg"><span id="lbl_sec_b_silver">🥈 Silver Sponsor — $500–$750</span></div>
+                            <div class="text-xs text-gray-400 mt-1">Very attractive price point.</div>
+                            <ul class="text-xs text-gray-500 mt-2 space-y-0.5 list-disc list-inside">
+                                <li>Medium logo on website</li>
+                                <li>Prize sponsorship option</li>
+                                <li>Booth or mentor participation</li>
+                                <li>Thank-you recognition at closing ceremony</li>
+                            </ul>
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <div id="sec_b_bronze_wrap">
+                <label class="tier-card" id="tier_bronze">
+                    <div class="flex items-start gap-3">
+                        <input type="radio" name="sponsorship_level" value="bronze" class="mt-1" onchange="selectTier('bronze')">
+                        <div>
+                            <div class="font-bold text-orange-400 text-lg"><span id="lbl_sec_b_bronze">🥉 Bronze Sponsor — $200–$400</span></div>
+                            <div class="text-xs text-gray-400 mt-1">Easy entry level.</div>
+                            <ul class="text-xs text-gray-500 mt-2 space-y-0.5 list-disc list-inside">
+                                <li>Logo on website + event thank-you slide</li>
+                                <li>Sponsor listing</li>
+                                <li>Perfect for restaurants, tutoring centers, small businesses</li>
+                            </ul>
+                        </div>
+                    </div>
+                </label>
+            </div>
+
+            <div id="sec_b_community_wrap">
+                <label class="tier-card" id="tier_community">
+                    <div class="flex items-start gap-3">
+                        <input type="radio" name="sponsorship_level" value="community" class="mt-1" onchange="selectTier('community')">
+                        <div>
+                            <div class="font-bold text-red-400 text-lg"><span id="lbl_sec_b_community">❤️ Community Sponsor — $50–$150</span></div>
+                            <div class="text-xs text-gray-400 mt-1">VERY important for school events.</div>
+                            <ul class="text-xs text-gray-500 mt-2 space-y-0.5 list-disc list-inside">
+                                <li>Name listed on website</li>
+                                <li>Social media thank you</li>
+                                <li>Parents or small organizations often choose this</li>
+                            </ul>
+                        </div>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- SECTION C -->
+        <div id="sec_c_wrap" class="section-card">
+            <div class="section-title"><i class="fa-solid fa-bullseye"></i> <span id="lbl_sec_c">Section C — Sponsorship Goals</span></div>
+            <p class="section-desc">Companies sponsor for different reasons. Select all that apply — this helps us tailor your sponsorship benefits.</p>
+
+            <!-- Talent -->
+            <div id="sec_c_talent_wrap" class="mb-5">
+                <div class="text-sm font-semibold text-white mb-2"><span id="lbl_sec_c_talent">🧑‍💻 Talent &amp; Recruiting Goals</span></div>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="recruit_interns"><span class="text-sm text-gray-300">Recruit interns or full-time hires</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="talent_pipeline"><span class="text-sm text-gray-300">Build a talent pipeline</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="resume_book"><span class="text-sm text-gray-300">Access participant resume book</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="network_devs"><span class="text-sm text-gray-300">Network with top student developers</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="promote_careers"><span class="text-sm text-gray-300">Promote company careers or internship programs</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="specialized_talent"><span class="text-sm text-gray-300">Identify specialized talent (AI, cybersecurity, backend, etc.)</span></label>
+            </div>
+
+            <!-- Product -->
+            <div id="sec_c_product_wrap" class="mb-5">
+                <div class="text-sm font-semibold text-white mb-2"><span id="lbl_sec_c_product">🚀 Product &amp; Technology Adoption</span></div>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="api_adoption"><span class="text-sm text-gray-300">Encourage use of our API or platform</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="dev_tools"><span class="text-sm text-gray-300">Promote developer tools or SDKs</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="dev_feedback"><span class="text-sm text-gray-300">Gather developer feedback on products</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="beta_test"><span class="text-sm text-gray-300">Test beta software with participants</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="ecosystem_adoption"><span class="text-sm text-gray-300">Increase developer ecosystem adoption</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="showcase_tech"><span class="text-sm text-gray-300">Showcase new technology releases</span></label>
+            </div>
+
+            <!-- Brand -->
+            <div id="sec_c_brand_wrap" class="mb-5">
+                <div class="text-sm font-semibold text-white mb-2"><span id="lbl_sec_c_brand">📣 Brand Awareness &amp; Marketing</span></div>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="brand_recognition"><span class="text-sm text-gray-300">Increase brand recognition among students</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="company_image"><span class="text-sm text-gray-300">Promote company image within tech community</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="social_exposure"><span class="text-sm text-gray-300">Increase social media exposure</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="promote_launches"><span class="text-sm text-gray-300">Promote upcoming launches</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="industry_leadership"><span class="text-sm text-gray-300">Demonstrate industry leadership</span></label>
+            </div>
+
+            <!-- Community -->
+            <div id="sec_c_community_wrap" class="mb-5">
+                <div class="text-sm font-semibold text-white mb-2"><span id="lbl_sec_c_community">🤝 Community &amp; Education Support</span></div>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="support_stem"><span class="text-sm text-gray-300">Support STEM education</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="local_tech"><span class="text-sm text-gray-300">Support local tech communities</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="innovation"><span class="text-sm text-gray-300">Promote innovation and entrepreneurship</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="csr"><span class="text-sm text-gray-300">Corporate social responsibility (CSR)</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="dei"><span class="text-sm text-gray-300">Diversity and inclusion initiatives</span></label>
+            </div>
+
+            <!-- Innovation -->
+            <div id="sec_c_innovation_wrap" class="mb-5">
+                <div class="text-sm font-semibold text-white mb-2"><span id="lbl_sec_c_innovation">🧠 Innovation &amp; Research</span></div>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="explore_use_cases"><span class="text-sm text-gray-300">Explore innovative use cases</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="product_ideas"><span class="text-sm text-gray-300">Discover new product ideas</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="collaborate_research"><span class="text-sm text-gray-300">Collaborate with researchers or students</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="startup_partnerships"><span class="text-sm text-gray-300">Identify startup partnerships</span></label>
+            </div>
+
+            <!-- Biz Dev -->
+            <div id="sec_c_bizdev_wrap" class="mb-5">
+                <div class="text-sm font-semibold text-white mb-2"><span id="lbl_sec_c_bizdev">💼 Business Development</span></div>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="connect_startups"><span class="text-sm text-gray-300">Connect with startups or founders</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="explore_partnerships"><span class="text-sm text-gray-300">Explore partnerships</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="enterprise_services"><span class="text-sm text-gray-300">Promote enterprise services</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="consulting"><span class="text-sm text-gray-300">Market consulting or enterprise solutions</span></label>
+            </div>
+
+            <!-- Event Presence -->
+            <div id="sec_c_event_wrap" class="mb-5">
+                <div class="text-sm font-semibold text-white mb-2"><span id="lbl_sec_c_event">🎤 Event Presence &amp; Engagement</span></div>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="host_workshops"><span class="text-sm text-gray-300">Host workshops or technical talks</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="provide_mentors_goal"><span class="text-sm text-gray-300">Provide mentors</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="judge_projects_goal"><span class="text-sm text-gray-300">Judge projects</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="sponsor_challenges"><span class="text-sm text-gray-300">Sponsor challenges or prizes</span></label>
+            </div>
+
+            <!-- Data -->
+            <div id="sec_c_data_wrap" class="mb-5">
+                <div class="text-sm font-semibold text-white mb-2"><span id="lbl_sec_c_data">📊 Data &amp; Insights</span></div>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="participant_stats"><span class="text-sm text-gray-300">Receive anonymized participant statistics</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="dev_trends"><span class="text-sm text-gray-300">Understand developer trends</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="tech_preferences"><span class="text-sm text-gray-300">Learn technology preferences of students</span></label>
+            </div>
+
+            <!-- Custom Goals -->
+            <div id="sec_c_custom_wrap">
+                <div class="text-sm font-semibold text-white mb-2"><span id="lbl_sec_c_custom">Custom Goals</span></div>
+                <p class="text-xs text-gray-500 mb-2">Add any additional goals specific to your organization.</p>
+                <div id="customGoalsContainer">
+                    <div class="custom-entry">
+                        <input type="text" name="goals_custom[]" placeholder="Describe your goal…" class="form-input">
+                        <button type="button" onclick="addCustomGoal()" class="px-3 py-2 bg-brand/20 hover:bg-brand/30 text-brand rounded-lg text-sm transition" title="Add another">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION D -->
+        <div id="sec_d_wrap" class="section-card">
+            <div class="section-title"><i class="fa-solid fa-calendar-check"></i> <span id="lbl_sec_d">Section D — Event Participation Options</span></div>
+            <p class="section-desc">Would you like to actively participate in the event?</p>
+
+            <div id="sec_d_workshop_wrap"><label class="checkbox-row"><input type="checkbox" name="participation" value="workshop"><span class="text-sm text-gray-300"><span id="lbl_sec_d_workshop">Host a workshop?</span></span></label></div>
+            <div id="sec_d_mentors_wrap"><label class="checkbox-row"><input type="checkbox" name="participation" value="mentors"><span class="text-sm text-gray-300"><span id="lbl_sec_d_mentors">Provide mentors?</span></span></label></div>
+            <div id="sec_d_judge_wrap"><label class="checkbox-row"><input type="checkbox" name="participation" value="judge"><span class="text-sm text-gray-300"><span id="lbl_sec_d_judge">Judge projects?</span></span></label></div>
+            <div id="sec_d_prize_wrap"><label class="checkbox-row"><input type="checkbox" name="participation" value="prize"><span class="text-sm text-gray-300"><span id="lbl_sec_d_prize">Sponsor a prize?</span></span></label></div>
+            <div id="sec_d_keynote_wrap"><label class="checkbox-row"><input type="checkbox" name="participation" value="keynote"><span class="text-sm text-gray-300"><span id="lbl_sec_d_keynote">Give keynote remarks?</span></span></label></div>
+        </div>
+
+        <!-- SECTION E -->
+        <div id="sec_e_wrap" class="section-card">
+            <div class="section-title"><i class="fa-solid fa-trophy"></i> <span id="lbl_sec_e">Section E — Challenge Prize Sponsorship</span></div>
+            <p class="section-desc">If you would like to sponsor a prize or challenge, fill in the details below (optional).</p>
+
+            <div id="sec_e_category_name_wrap" class="field-group">
+                <label class="field-label"><span id="lbl_sec_e_category_name">Prize Category Name</span></label>
+                <input type="text" id="e_cat" name="prize_category_name" placeholder="e.g. Best AI Integration" class="form-input">
+            </div>
+            <div id="sec_e_description_wrap" class="field-group">
+                <label class="field-label"><span id="lbl_sec_e_description">Prize Description</span></label>
+                <textarea id="e_desc" name="prize_description" rows="3" class="form-textarea" placeholder="Describe what the winner will receive…"></textarea>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div id="sec_e_value_wrap" class="field-group">
+                    <label class="field-label"><span id="lbl_sec_e_value">Prize Value ($ or item)</span></label>
+                    <input type="text" id="e_value" name="prize_value" placeholder="e.g. $500 or Raspberry Pi Kit" class="form-input">
+                </div>
+                <div id="sec_e_judging_req_wrap" class="field-group">
+                    <label class="field-label"><span id="lbl_sec_e_judging_req">Judging Requirements</span></label>
+                    <input type="text" id="e_judging" name="prize_judging_requirements" placeholder="e.g. Must use your API" class="form-input">
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION F -->
+        <div id="sec_f_wrap" class="section-card">
+            <div class="section-title"><i class="fa-solid fa-user-tie"></i> <span id="lbl_sec_f">Section F — Recruiting Participation</span></div>
+            <p class="section-desc">Companies love this section. Let us know how you'd like to engage with talent.</p>
+
+            <div id="sec_f_resume_book_wrap"><label class="checkbox-row"><input type="checkbox" id="f_resume" name="resume_book_access" value="1"><span class="text-sm text-gray-300"><span id="lbl_sec_f_resume_book">Resume book access requested?</span></span></label></div>
+            <div id="sec_f_recruiting_wrap"><label class="checkbox-row"><input type="checkbox" id="f_recruiting" name="recruiting_interested" value="1"><span class="text-sm text-gray-300"><span id="lbl_sec_f_recruiting">Interested in recruiting participants?</span></span></label></div>
+            <div id="sec_f_booth_wrap"><label class="checkbox-row"><input type="checkbox" id="f_booth" name="booth_requested" value="1"><span class="text-sm text-gray-300"><span id="lbl_sec_f_booth">Booth requested?</span></span></label></div>
+        </div>
+
+        <!-- SECTION G -->
+        <div id="sec_g_wrap" class="section-card">
+            <div class="section-title"><i class="fa-solid fa-palette"></i> <span id="lbl_sec_g">Section G — Branding + Marketing</span></div>
+            <p class="section-desc">Help us represent your brand accurately across all event materials.</p>
+
+            <div id="sec_g_logo_wrap" class="field-group">
+                <label class="field-label"><span id="lbl_sec_g_logo">Company Logo (URL or image link)</span></label>
+                <input type="url" id="g_logo" name="company_logo_url" placeholder="https://yourcompany.com/logo.png" class="form-input">
+                <p class="text-xs text-gray-600 mt-1">Provide a public URL to your company logo (PNG or SVG preferred). Contact us separately for file upload.</p>
+            </div>
+            <div id="sec_g_description_wrap" class="field-group">
+                <label class="field-label"><span id="lbl_sec_g_description">Preferred Company Description</span></label>
+                <textarea id="g_desc" name="company_description" rows="3" class="form-textarea" placeholder="A short blurb about your company (used on our website and event materials)…"></textarea>
+            </div>
+            <div id="sec_g_social_wrap" class="field-group">
+                <label class="field-label"><span id="lbl_sec_g_social">Social Media Handles</span></label>
+                <input type="text" id="g_social" name="social_media_handles" placeholder="e.g. @Company on X, LinkedIn: /company, Instagram: @company" class="form-input">
+            </div>
+            <div id="sec_g_public_tag_wrap" class="field-group">
+                <p class="field-label mb-2"><span id="lbl_sec_g_public_tag">Can we tag your company publicly on social media?</span></p>
+                <div class="flex gap-6">
+                    <label class="radio-row"><input type="radio" name="allow_public_tag" value="1" checked> <span class="text-sm text-gray-300">Yes</span></label>
+                    <label class="radio-row"><input type="radio" name="allow_public_tag" value="0"> <span class="text-sm text-gray-300">No</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION H -->
+        <div id="sec_h_wrap" class="section-card">
+            <div class="section-title"><i class="fa-solid fa-credit-card"></i> <span id="lbl_sec_h">Section H — Payment Details</span></div>
+            <p class="section-desc">We'll follow up with payment instructions. This section helps us prepare your invoice.</p>
+
+            <div id="sec_h_amount_wrap" class="field-group">
+                <label class="field-label"><span id="lbl_sec_h_amount">Sponsorship Amount</span></label>
+                <input type="text" id="h_amount" name="sponsorship_amount" placeholder="e.g. $500" class="form-input">
+            </div>
+            <div id="sec_h_invoice_wrap" class="field-group">
+                <label class="checkbox-row"><input type="checkbox" id="h_invoice" name="invoice_required" value="1"><span class="text-sm text-gray-300"><span id="lbl_sec_h_invoice">Invoice required?</span></span></label>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div id="sec_h_billing_contact_wrap" class="field-group">
+                    <label class="field-label"><span id="lbl_sec_h_billing_contact">Billing Contact Name</span></label>
+                    <input type="text" id="h_billing_contact" name="billing_contact" class="form-input">
+                </div>
+                <div id="sec_h_billing_email_wrap" class="field-group">
+                    <label class="field-label"><span id="lbl_sec_h_billing_email">Billing Email</span></label>
+                    <input type="email" id="h_billing_email" name="billing_email" class="form-input">
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION I -->
+        <div id="sec_i_wrap" class="section-card">
+            <div class="section-title"><i class="fa-solid fa-gift"></i> <span id="lbl_sec_i">Section I — Swag + Materials</span></div>
+            <p class="section-desc">Would you like to contribute swag or resources to participants?</p>
+
+            <div id="sec_i_swag_bags_wrap"><label class="checkbox-row"><input type="checkbox" name="swag" value="swag_bags"><span class="text-sm text-gray-300"><span id="lbl_sec_i_swag_bags">Include swag in participant bags?</span></span></label></div>
+            <div id="sec_i_api_credits_wrap"><label class="checkbox-row"><input type="checkbox" name="swag" value="api_credits"><span class="text-sm text-gray-300"><span id="lbl_sec_i_api_credits">Provide API credits?</span></span></label></div>
+            <div id="sec_i_cloud_credits_wrap"><label class="checkbox-row"><input type="checkbox" name="swag" value="cloud_credits"><span class="text-sm text-gray-300"><span id="lbl_sec_i_cloud_credits">Provide cloud credits?</span></span></label></div>
+            <div id="sec_i_hardware_wrap"><label class="checkbox-row"><input type="checkbox" name="swag" value="hardware"><span class="text-sm text-gray-300"><span id="lbl_sec_i_hardware">Provide hardware prizes?</span></span></label></div>
+
+            <!-- Custom swag entries -->
+            <div id="sec_i_custom_wrap" class="mt-2">
+                <div class="text-xs text-gray-500 mb-2"><span id="lbl_sec_i_custom">Other swag/materials (describe):</span></div>
+                <div id="customSwagContainer">
+                    <div class="custom-entry">
+                        <input type="text" name="swag_custom[]" placeholder="Describe custom item…" class="form-input">
+                        <button type="button" onclick="addCustomSwag()" class="px-3 py-2 bg-brand/20 hover:bg-brand/30 text-brand rounded-lg text-sm transition" title="Add another">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sec_i_shipping_wrap" class="field-group mt-4">
+                <label class="field-label"><span id="lbl_sec_i_shipping">Shipping Address (if shipping swag to us)</span></label>
+                <textarea id="i_shipping" name="shipping_address" rows="2" class="form-textarea" placeholder="Full shipping address…"></textarea>
+            </div>
+        </div>
+
+        <!-- SECTION J -->
+        <div id="sec_j_wrap" class="section-card">
+            <div class="section-title"><i class="fa-solid fa-id-badge"></i> <span id="lbl_sec_j">Section J — Representative Attendance</span></div>
+            <p class="section-desc">Let us know if company representatives will attend the event in person.</p>
+
+            <div id="sec_j_attending_wrap" class="field-group">
+                <p class="field-label mb-2"><span id="lbl_sec_j_attending">Representatives attending?</span></p>
+                <div class="flex gap-6">
+                    <label class="radio-row"><input type="radio" name="reps_attending" value="1" id="reps_yes" onchange="toggleReps(true)"> <span class="text-sm text-gray-300">Yes</span></label>
+                    <label class="radio-row"><input type="radio" name="reps_attending" value="0" id="reps_no" checked onchange="toggleReps(false)"> <span class="text-sm text-gray-300">No</span></label>
+                </div>
+            </div>
+
+            <div id="repsDetails" class="hidden-field space-y-4">
+                <div id="sec_j_names_wrap" class="field-group">
+                    <label class="field-label"><span id="lbl_sec_j_names">Representative Names</span></label>
+                    <textarea id="j_names" name="rep_names" rows="2" class="form-textarea" placeholder="One name per line…"></textarea>
+                </div>
+                <div id="sec_j_emails_wrap" class="field-group">
+                    <label class="field-label"><span id="lbl_sec_j_emails">Representative Emails</span></label>
+                    <textarea id="j_emails" name="rep_emails" rows="2" class="form-textarea" placeholder="One email per line…"></textarea>
+                </div>
+                <div id="sec_j_dietary_wrap" class="field-group">
+                    <label class="field-label"><span id="lbl_sec_j_dietary">Dietary Restrictions (if in-person)</span></label>
+                    <input type="text" id="j_dietary" name="rep_dietary" class="form-input" placeholder="e.g. Vegetarian, Gluten-free, None">
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION K -->
+        <div id="sec_k_wrap" class="section-card border-brand/30">
+            <div class="section-title"><i class="fa-solid fa-file-contract"></i> <span id="lbl_sec_k">Section K — Legal Agreement</span></div>
+            <p class="section-desc">Please review and accept the following agreements to complete your application.</p>
+
+            <div id="sec_k_terms_wrap"><label class="checkbox-row"><input type="checkbox" id="k_terms" name="agree_terms" value="1" required><span class="text-sm text-gray-300"><span id="lbl_sec_k_terms">I agree to the sponsorship terms and understand the benefits associated with my selected tier.</span> <span class="field-required">*</span></span></label></div>
+            <div id="sec_k_logo_wrap"><label class="checkbox-row mt-2"><input type="checkbox" id="k_logo" name="allow_logo_usage" value="1" required><span class="text-sm text-gray-300"><span id="lbl_sec_k_logo">I allow the event organizers to use our logo on website, print, and digital event materials.</span> <span class="field-required">*</span></span></label></div>
+            <div id="sec_k_payment_wrap"><label class="checkbox-row mt-2"><input type="checkbox" id="k_payment" name="payment_agreement" value="1" required><span class="text-sm text-gray-300"><span id="lbl_sec_k_payment">I understand that payment details will be arranged with the organizers upon acceptance.</span> <span class="field-required">*</span></span></label></div>
+        </div>
+
+        <!-- SECTION L -->
+        <div id="sec_l_wrap" class="section-card">
+            <div class="section-title"><i class="fa-solid fa-comment-dots"></i> <span id="lbl_sec_l">Section L — Additional Notes</span></div>
+            <p class="section-desc">Is there anything else you'd like us to know? Custom involvement, special requests, or questions are all welcome.</p>
+
+            <div id="sec_l_notes_wrap" class="field-group">
+                <label class="field-label"><span id="lbl_sec_l_notes">Additional Notes / Custom Requests</span></label>
+                <textarea id="l_notes" name="additional_notes" rows="5" class="form-textarea" placeholder="Tell us about any custom involvement, special needs, or anything else…"></textarea>
+            </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="flex flex-col items-center gap-4 mt-4">
+            <button type="submit" id="submitBtn" class="w-full max-w-md flex items-center justify-center gap-3 px-10 py-4 bg-brand hover:bg-brand-light text-dark-bg font-extrabold text-lg rounded-xl shadow-lg shadow-brand/30 transition transform hover:scale-105">
+                <i class="fa-solid fa-paper-plane"></i>
+                Submit Sponsorship Application
+            </button>
+            <p class="text-xs text-gray-500 text-center max-w-md">By submitting, you agree to be contacted by the ICN Hackathon organizing team. Your information will not be shared with third parties.</p>
+        </div>
+
+    </form>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-20 py-8 px-4 bg-black">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2 text-gray-600 text-xs">
+            <p>&copy; 2026 Chicago Area ICN Hackathon. All rights reserved.</p>
+            <div class="flex gap-4">
+                <a href="index.html" class="hover:text-gray-400 transition">Home</a>
+                <a href="mailto:junaidekram@gmail.com" class="hover:text-gray-400 transition">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const API_URL = 'https://red-cherry-8b7a.jtekram.workers.dev';
+
+        // ── Form Config Loading ────────────────────────────────────────────────
+        async function loadFormConfig() {
+            try {
+                const res = await fetch(`${API_URL}/sponsor-form-config`);
+                if (res.ok) {
+                    const config = await res.json();
+                    applyConfig(config);
+                }
+            } catch (e) {
+                // If config API isn't available, show all fields (default behavior)
+                console.warn('Could not load form config, using defaults.', e);
+            }
+            document.getElementById('formLoading').style.display = 'none';
+            document.getElementById('sponsorForm').style.display = 'block';
+        }
+
+        function applyConfig(config) {
+            // config is an array of { field_key, label, enabled }
+            config.forEach(({ field_key, label, enabled }) => {
+                // Update label text
+                const lblEl = document.getElementById(`lbl_${field_key}`);
+                if (lblEl) lblEl.textContent = label;
+
+                // Show/hide wrapper
+                const wrapEl = document.getElementById(`${field_key}_wrap`);
+                if (wrapEl) {
+                    if (!enabled) wrapEl.classList.add('hidden-field');
+                    else wrapEl.classList.remove('hidden-field');
+                }
+            });
+        }
+
+        // ── Tier card selection ───────────────────────────────────────────────
+        function selectTier(tier) {
+            ['title', 'gold', 'silver', 'bronze', 'community'].forEach(t => {
+                document.getElementById(`tier_${t}`).classList.toggle('selected', t === tier);
+            });
+        }
+
+        // ── Representative toggle ─────────────────────────────────────────────
+        function toggleReps(show) {
+            const el = document.getElementById('repsDetails');
+            if (show) el.classList.remove('hidden-field');
+            else el.classList.add('hidden-field');
+        }
+
+        // ── Custom Goals ──────────────────────────────────────────────────────
+        function addCustomGoal() {
+            const container = document.getElementById('customGoalsContainer');
+            const div = document.createElement('div');
+            div.className = 'custom-entry mt-2';
+            div.innerHTML = `
+                <input type="text" name="goals_custom[]" placeholder="Describe your goal…" class="form-input">
+                <button type="button" onclick="this.parentElement.remove()" class="px-3 py-2 bg-red-900/40 hover:bg-red-800/60 text-red-400 rounded-lg text-sm transition" title="Remove">
+                    <i class="fa-solid fa-trash"></i>
+                </button>`;
+            container.appendChild(div);
+        }
+
+        // ── Custom Swag ───────────────────────────────────────────────────────
+        function addCustomSwag() {
+            const container = document.getElementById('customSwagContainer');
+            const div = document.createElement('div');
+            div.className = 'custom-entry mt-2';
+            div.innerHTML = `
+                <input type="text" name="swag_custom[]" placeholder="Describe custom item…" class="form-input">
+                <button type="button" onclick="this.parentElement.remove()" class="px-3 py-2 bg-red-900/40 hover:bg-red-800/60 text-red-400 rounded-lg text-sm transition" title="Remove">
+                    <i class="fa-solid fa-trash"></i>
+                </button>`;
+            container.appendChild(div);
+        }
+
+        // ── Form Submission ───────────────────────────────────────────────────
+        async function submitSponsor(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Submitting…';
+            btn.disabled = true;
+
+            // Collect checkboxes
+            const goals = [...document.querySelectorAll('input[name="goals"]:checked')].map(c => c.value);
+            const participation = [...document.querySelectorAll('input[name="participation"]:checked')].map(c => c.value);
+            const swag = [...document.querySelectorAll('input[name="swag"]:checked')].map(c => c.value);
+
+            // Collect custom repeatable fields
+            const goalsCustom = [...document.querySelectorAll('input[name="goals_custom[]"]')].map(i => i.value).filter(v => v.trim());
+            const swagCustom = [...document.querySelectorAll('input[name="swag_custom[]"]')].map(i => i.value).filter(v => v.trim());
+
+            const allowTag = document.querySelector('input[name="allow_public_tag"]:checked');
+            const repsAtt = document.querySelector('input[name="reps_attending"]:checked');
+            const sponsorLevel = document.querySelector('input[name="sponsorship_level"]:checked');
+
+            const payload = {
+                // Section A
+                company_name: document.getElementById('a_company').value,
+                primary_contact_name: document.getElementById('a_contact').value,
+                job_title: document.getElementById('a_title').value,
+                email: document.getElementById('a_email').value,
+                phone: document.getElementById('a_phone').value,
+                company_website: document.getElementById('a_website').value,
+                headquarters_location: document.getElementById('a_hq').value,
+                // Section B
+                sponsorship_level: sponsorLevel ? sponsorLevel.value : '',
+                // Section C
+                sponsorship_goals: JSON.stringify(goals),
+                goals_custom: JSON.stringify(goalsCustom),
+                // Section D
+                event_participation: JSON.stringify(participation),
+                // Section E
+                prize_category_name: document.getElementById('e_cat').value,
+                prize_description: document.getElementById('e_desc').value,
+                prize_value: document.getElementById('e_value').value,
+                prize_judging_requirements: document.getElementById('e_judging').value,
+                // Section F
+                resume_book_access: document.getElementById('f_resume').checked ? 1 : 0,
+                recruiting_interested: document.getElementById('f_recruiting').checked ? 1 : 0,
+                booth_requested: document.getElementById('f_booth').checked ? 1 : 0,
+                // Section G
+                company_logo_url: document.getElementById('g_logo').value,
+                company_description: document.getElementById('g_desc').value,
+                social_media_handles: document.getElementById('g_social').value,
+                allow_public_tag: allowTag ? parseInt(allowTag.value) : 1,
+                // Section H
+                sponsorship_amount: document.getElementById('h_amount').value,
+                invoice_required: document.getElementById('h_invoice').checked ? 1 : 0,
+                billing_contact: document.getElementById('h_billing_contact').value,
+                billing_email: document.getElementById('h_billing_email').value,
+                // Section I
+                swag_options: JSON.stringify(swag),
+                swag_custom: JSON.stringify(swagCustom),
+                shipping_address: document.getElementById('i_shipping').value,
+                // Section J
+                reps_attending: repsAtt ? parseInt(repsAtt.value) : 0,
+                rep_names: document.getElementById('j_names').value,
+                rep_emails: document.getElementById('j_emails').value,
+                rep_dietary: document.getElementById('j_dietary').value,
+                // Section K
+                agree_terms: document.getElementById('k_terms').checked ? 1 : 0,
+                allow_logo_usage: document.getElementById('k_logo').checked ? 1 : 0,
+                payment_agreement: document.getElementById('k_payment').checked ? 1 : 0,
+                // Section L
+                additional_notes: document.getElementById('l_notes').value
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/apply-sponsor`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    document.getElementById('sponsorForm').style.display = 'none';
+                    document.getElementById('successScreen').style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    const errText = await res.text().catch(() => '');
+                    throw new Error(`Server responded with ${res.status}${errText ? ': ' + errText : ''}`);
+                }
+            } catch (err) {
+                alert(`Submission failed: ${err.message}\n\nPlease try again or email us at junaidekram@gmail.com`);
+                console.error(err);
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Sponsorship Application';
+                btn.disabled = false;
+            }
+        }
+
+        // ── Init ──────────────────────────────────────────────────────────────
+        loadFormConfig();
+    </script>
+</body>
+</html>
