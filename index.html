@@ -232,10 +232,119 @@
         </div>
     </section>
 
-    <footer class="bg-black py-8 border-t border-gray-800 mt-10">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-gray-500 mb-2">&copy; 2026 Chicago Area Hackathon.</p>
+    <footer class="bg-black border-t border-gray-800 mt-10">
+
+        <!-- Sponsor CTA Banner -->
+        <div class="bg-gradient-to-r from-brand-dark/60 via-gray-900 to-brand-dark/60 border-b border-brand/30 py-12 px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <span class="inline-block mb-4 px-3 py-1 rounded-full bg-brand/20 text-brand text-xs font-mono font-bold tracking-widest uppercase">Partner With Us</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4">
+                    Become a <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-light to-blue-400">Sponsor</span>
+                </h2>
+                <p class="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+                    Reach the next generation of developers. Support STEM, gain talent pipeline access, and put your brand in front of Chicago's most passionate builders.
+                    Sponsorship tiers start at <span class="text-white font-bold">$50</span>.
+                </p>
+                <a href="sponsor.html" class="inline-flex items-center gap-3 px-10 py-4 bg-brand hover:bg-brand-light text-dark-bg font-extrabold text-lg rounded-xl shadow-lg shadow-brand/30 transition transform hover:scale-105">
+                    <i class="fa-solid fa-handshake"></i>
+                    Sponsor Us
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+                <p class="text-gray-500 text-sm mt-4">Gold, Silver, Bronze &amp; Community tiers available · Custom packages welcome</p>
+            </div>
         </div>
+
+        <!-- Main Footer -->
+        <div class="py-14 px-4">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
+
+                <!-- Brand Column -->
+                <div class="md:col-span-1">
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="icon.png" alt="ICN Hackathon" class="h-8 w-auto object-contain">
+                        <span class="font-mono font-bold text-white tracking-tight">CHICAGO_HACKATHON</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        A week-long hackathon for builders, designers, and dreamers in the Chicago area. Aug 2–9, 2026.
+                    </p>
+                    <div class="flex gap-4 mt-5">
+                        <a href="https://instagram.com" target="_blank" aria-label="Instagram" class="text-gray-500 hover:text-brand transition text-xl"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://twitter.com" target="_blank" aria-label="Twitter / X" class="text-gray-500 hover:text-brand transition text-xl"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn" class="text-gray-500 hover:text-brand transition text-xl"><i class="fa-brands fa-linkedin"></i></a>
+                        <a href="https://github.com" target="_blank" aria-label="GitHub" class="text-gray-500 hover:text-brand transition text-xl"><i class="fa-brands fa-github"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-white font-bold text-sm uppercase tracking-widest mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#about" class="hover:text-brand transition">About / Overview</a></li>
+                        <li><a href="#schedule" class="hover:text-brand transition">Event Timeline</a></li>
+                        <li><a href="#pitch-reqs" class="hover:text-brand transition">Pitch Requirements</a></li>
+                        <li><a href="#judges" class="hover:text-brand transition">Become a Judge</a></li>
+                        <li><a href="#register" class="hover:text-brand transition">Register</a></li>
+                        <li><a href="sponsor.html" class="hover:text-brand transition font-semibold text-brand">Sponsor the Event</a></li>
+                    </ul>
+                </div>
+
+                <!-- Registration -->
+                <div>
+                    <h4 class="text-white font-bold text-sm uppercase tracking-widest mb-4">Get Involved</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li>
+                            <button onclick="openModal('soloModal')" class="hover:text-brand transition text-left">
+                                <i class="fa-solid fa-user mr-1 text-brand/70"></i> Solo Registration ($15)
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="openModal('teamModal')" class="hover:text-brand transition text-left">
+                                <i class="fa-solid fa-users mr-1 text-blue-400/70"></i> Team Registration ($15/person)
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="openModal('judgeModal')" class="hover:text-brand transition text-left">
+                                <i class="fa-solid fa-gavel mr-1 text-purple-400/70"></i> Apply to Judge (Free)
+                            </button>
+                        </li>
+                        <li><a href="sponsor.html" class="hover:text-brand transition"><i class="fa-solid fa-handshake mr-1 text-yellow-400/70"></i> Become a Sponsor</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-white font-bold text-sm uppercase tracking-widest mb-4">Contact</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-location-dot mt-0.5 text-brand/70"></i>
+                            <span>25W530 75th St.<br>Naperville, IL</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fa-solid fa-envelope text-brand/70"></i>
+                            <a href="mailto:junaidekram@gmail.com" class="hover:text-brand transition">junaidekram@gmail.com</a>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fa-solid fa-envelope text-brand/70"></i>
+                            <a href="mailto:aqraman10@gmail.com" class="hover:text-brand transition">aqraman10@gmail.com</a>
+                        </li>
+                        <li class="flex items-start gap-2 mt-3">
+                            <i class="fa-solid fa-heart text-red-500 mt-0.5"></i>
+                            <span class="text-xs text-gray-500">Leftover proceeds donated to humanitarian relief in Gaza.</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Bottom bar -->
+        <div class="border-t border-gray-800 py-5 px-4">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2 text-gray-600 text-xs">
+                <p>&copy; 2026 Chicago Area ICN Hackathon. All rights reserved.</p>
+                <p>Built with <i class="fa-solid fa-heart text-red-500/80"></i> for the next generation.</p>
+            </div>
+        </div>
+
     </footer>
 
     <div id="soloModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
