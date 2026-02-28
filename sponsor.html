@@ -142,13 +142,14 @@
                     <div class="flex items-start gap-3">
                         <input type="radio" name="sponsorship_level" value="title" required class="mt-1" onchange="selectTier('title')">
                         <div>
-                            <div class="font-bold text-white text-lg"><span id="lbl_sec_b_title">⭐ Title Sponsor — $2,000–$3,500</span></div>
-                            <div class="text-xs text-gray-400 mt-1">Highest Sponsor Donator — Event named "Hackathon Presented by ___"</div>
+                            <div class="font-bold text-white text-lg"><span id="lbl_sec_b_title">⭐ Platinum Sponsor — $2,000–$3,500</span></div>
+                            <div class="text-xs text-gray-400 mt-1">Highest Platinum Donor gets to have their name in the name of the Hackathon: ex "Hackathon, Presented by ____"</div>
                             <ul class="text-xs text-gray-500 mt-2 space-y-0.5 list-disc list-inside">
                                 <li>Largest logo on all materials</li>
                                 <li>Opening ceremony recognition</li>
                                 <li>Dedicated judging seat &amp; workshop/demo session</li>
                                 <li>Prime booth, social media promotion, press announcements</li>
+                                <li>Any offer in any lower tier.</li>
                             </ul>
                             <div class="text-xs text-brand mt-2">Best for: local tech companies, universities, STEM programs</div>
                         </div>
@@ -162,12 +163,13 @@
                         <input type="radio" name="sponsorship_level" value="gold" class="mt-1" onchange="selectTier('gold')">
                         <div>
                             <div class="font-bold text-yellow-400 text-lg"><span id="lbl_sec_b_gold">🥇 Gold Sponsor — $1,000–$1,500</span></div>
-                            <div class="text-xs text-gray-400 mt-1">Your main sponsors.</div>
+                            <div class="text-xs text-gray-400 mt-1"></div>
                             <ul class="text-xs text-gray-500 mt-2 space-y-0.5 list-disc list-inside">
                                 <li>Large logo on website + posters</li>
                                 <li>Judge participation &amp; challenge prize sponsorship</li>
                                 <li>Workshop or mentoring opportunity</li>
                                 <li>Recruiting/resume access &amp; social media shoutouts</li>
+                                <li>Any offer in any lower tier.</li>
                             </ul>
                         </div>
                     </div>
@@ -180,12 +182,13 @@
                         <input type="radio" name="sponsorship_level" value="silver" class="mt-1" onchange="selectTier('silver')">
                         <div>
                             <div class="font-bold text-gray-300 text-lg"><span id="lbl_sec_b_silver">🥈 Silver Sponsor — $500–$750</span></div>
-                            <div class="text-xs text-gray-400 mt-1">Very attractive price point.</div>
+                            <div class="text-xs text-gray-400 mt-1"></div>
                             <ul class="text-xs text-gray-500 mt-2 space-y-0.5 list-disc list-inside">
                                 <li>Medium logo on website</li>
                                 <li>Prize sponsorship option</li>
                                 <li>Booth or mentor participation</li>
                                 <li>Thank-you recognition at closing ceremony</li>
+                                <li>Any offer in any lower tier.</li>
                             </ul>
                         </div>
                     </div>
@@ -198,11 +201,12 @@
                         <input type="radio" name="sponsorship_level" value="bronze" class="mt-1" onchange="selectTier('bronze')">
                         <div>
                             <div class="font-bold text-orange-400 text-lg"><span id="lbl_sec_b_bronze">🥉 Bronze Sponsor — $200–$400</span></div>
-                            <div class="text-xs text-gray-400 mt-1">Easy entry level.</div>
+                            <div class="text-xs text-gray-400 mt-1"></div>
                             <ul class="text-xs text-gray-500 mt-2 space-y-0.5 list-disc list-inside">
                                 <li>Logo on website + event thank-you slide</li>
                                 <li>Sponsor listing</li>
                                 <li>Perfect for restaurants, tutoring centers, small businesses</li>
+                                <li>Any offer in any lower tier.</li>
                             </ul>
                         </div>
                     </div>
@@ -215,11 +219,10 @@
                         <input type="radio" name="sponsorship_level" value="community" class="mt-1" onchange="selectTier('community')">
                         <div>
                             <div class="font-bold text-red-400 text-lg"><span id="lbl_sec_b_community">❤️ Community Sponsor — $50–$150</span></div>
-                            <div class="text-xs text-gray-400 mt-1">VERY important for school events.</div>
+                            <div class="text-xs text-gray-400 mt-1"></div>
                             <ul class="text-xs text-gray-500 mt-2 space-y-0.5 list-disc list-inside">
                                 <li>Name listed on website</li>
                                 <li>Social media thank you</li>
-                                <li>Parents or small organizations often choose this</li>
                             </ul>
                         </div>
                     </div>
@@ -246,7 +249,7 @@
             <!-- Product -->
             <div id="sec_c_product_wrap" class="mb-5">
                 <div class="text-sm font-semibold text-white mb-2"><span id="lbl_sec_c_product">🚀 Product &amp; Technology Adoption</span></div>
-                <label class="checkbox-row"><input type="checkbox" name="goals" value="api_adoption"><span class="text-sm text-gray-300">Encourage use of our API or platform</span></label>
+                <label class="checkbox-row"><input type="checkbox" name="goals" value="api_adoption"><span class="text-sm text-gray-300">Encourage use of your API or platform</span></label>
                 <label class="checkbox-row"><input type="checkbox" name="goals" value="dev_tools"><span class="text-sm text-gray-300">Promote developer tools or SDKs</span></label>
                 <label class="checkbox-row"><input type="checkbox" name="goals" value="dev_feedback"><span class="text-sm text-gray-300">Gather developer feedback on products</span></label>
                 <label class="checkbox-row"><input type="checkbox" name="goals" value="beta_test"><span class="text-sm text-gray-300">Test beta software with participants</span></label>
@@ -281,15 +284,6 @@
                 <label class="checkbox-row"><input type="checkbox" name="goals" value="product_ideas"><span class="text-sm text-gray-300">Discover new product ideas</span></label>
                 <label class="checkbox-row"><input type="checkbox" name="goals" value="collaborate_research"><span class="text-sm text-gray-300">Collaborate with researchers or students</span></label>
                 <label class="checkbox-row"><input type="checkbox" name="goals" value="startup_partnerships"><span class="text-sm text-gray-300">Identify startup partnerships</span></label>
-            </div>
-
-            <!-- Biz Dev -->
-            <div id="sec_c_bizdev_wrap" class="mb-5">
-                <div class="text-sm font-semibold text-white mb-2"><span id="lbl_sec_c_bizdev">💼 Business Development</span></div>
-                <label class="checkbox-row"><input type="checkbox" name="goals" value="connect_startups"><span class="text-sm text-gray-300">Connect with startups or founders</span></label>
-                <label class="checkbox-row"><input type="checkbox" name="goals" value="explore_partnerships"><span class="text-sm text-gray-300">Explore partnerships</span></label>
-                <label class="checkbox-row"><input type="checkbox" name="goals" value="enterprise_services"><span class="text-sm text-gray-300">Promote enterprise services</span></label>
-                <label class="checkbox-row"><input type="checkbox" name="goals" value="consulting"><span class="text-sm text-gray-300">Market consulting or enterprise solutions</span></label>
             </div>
 
             <!-- Event Presence -->
@@ -364,7 +358,7 @@
         <!-- SECTION F -->
         <div id="sec_f_wrap" class="section-card">
             <div class="section-title"><i class="fa-solid fa-user-tie"></i> <span id="lbl_sec_f">Section F — Recruiting Participation</span></div>
-            <p class="section-desc">Companies love this section. Let us know how you'd like to engage with talent.</p>
+            <p class="section-desc">Let us know how you'd like to engage with talent.</p>
 
             <div id="sec_f_resume_book_wrap"><label class="checkbox-row"><input type="checkbox" id="f_resume" name="resume_book_access" value="1"><span class="text-sm text-gray-300"><span id="lbl_sec_f_resume_book">Resume book access requested?</span></span></label></div>
             <div id="sec_f_recruiting_wrap"><label class="checkbox-row"><input type="checkbox" id="f_recruiting" name="recruiting_interested" value="1"><span class="text-sm text-gray-300"><span id="lbl_sec_f_recruiting">Interested in recruiting participants?</span></span></label></div>
